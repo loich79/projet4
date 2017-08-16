@@ -1,0 +1,41 @@
+body {
+    background-color: rgb(51, 17, 7);
+}
+.darkgrey-background {
+    background-color: rgb(34,34,34);
+}
+.orange-background {
+    background-color: rgb(201,45,0);
+}
+.grey-background {
+    background-color: rgb(78,78,78);
+}
+.white-text {
+    color: white;
+}
+/*bannière*/
+#banner {
+    display: flex;
+    align-content: center;
+    background-color: rgb(34,34,34);
+    color: white;
+    height: 100px;
+}
+#logo {
+    height: 50px;
+    width: 165px;
+    align-self: center;
+    margin: 5px;
+}
+#main-title {
+    align-self: center;
+}
+/*contenu*/
+#content {
+    background-color: white;
+    padding: 10px 5px 10px 5px;
+}
+#btn-achat {
+    display: block;
+    margin : auto;
+}

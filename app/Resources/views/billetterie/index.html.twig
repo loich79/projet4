@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% block title %}Accueil - Billetterie{% endblock %}
+{% block content %}
+    <h2>Horaires</h2>
+    <p>
+        Le musée est ouvert tous les jours de 9h à 18h excepté le mardi (fermeture des salles à partir de 17h30).
+    </p>
+    <h2 class="orange-background">Accès</h2>
+    <ul>
+        <li>Les accès par la Pyramide et la galerie du Carrousel : ouvert tous les jours sauf le mardi, de 9h à 19h30.</li>
+        <li>Passage Richelieu : ouvert tous les jours, sauf le mardi, de 9h à 17h30.</li>
+        <li>Porte des Lions : Cet accès est réservé aux visiteurs en groupe.</li>
+    </ul>
+
+    <h2>Tarifs</h2>
+    <p>
+        Le musée propose plusieurs types de tarifs :
+    </p>
+    <ul>
+        <li>Un tarif « normal » à partir de 12 ans à 16 €.</li>
+        <li>Un tarif « enfant » à partir de 4 ans et jusqu’à 12 ans, à 8 € (l’entrée est gratuite pour les enfants de moins de 4 ans).</li>
+        <li>Un tarif « senior » à partir de 60 ans pour 12  €.</li>
+        <li>Un tarif « réduit » de 10 € accordé dans certaines conditions (étudiant, employé du musée, d’un service du Ministère de la Culture, militaire…).</li>
+    </ul>
+    <button id="btn-achat" class="btn btn-success">Achetez votre billet</button>
+{% endblock %}
+
