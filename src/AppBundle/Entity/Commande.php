@@ -24,7 +24,7 @@ class Commande
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date_reservation", type="datetime")
+     * @ORM\Column(name="date_reservation", type="date")
      */
     private $dateReservation;
 
@@ -43,14 +43,21 @@ class Commande
     private $montantTotal;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="code_reservation", type="string", length=255)
-     */
+ * @var string
+ *
+ * @ORM\Column(name="code_reservation", type="string", length=255)
+ */
     private $codeReservation;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Billet", mappedBy="commande")
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=255)
+     */
+    private $email;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Billet", mappedBy="commande", cascade={"persist"})
      */
     private $billets;
 
@@ -199,5 +206,29 @@ class Commande
     public function getBillets()
     {
         return $this->billets;
+    }
+
+    /**
+     * Set email
+     *
+     * @param string $email
+     *
+     * @return Commande
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
     }
 }

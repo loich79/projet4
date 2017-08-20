@@ -25,7 +25,7 @@ class Billet
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date_visite", type="datetime")
+     * @ORM\Column(name="date_visite", type="date")
      */
     private $dateVisite;
 
@@ -51,6 +51,20 @@ class Billet
     private $type;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="pays", type="string", length=255)
+     */
+    private $pays;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="date_naissance", type="date")
+     */
+    private $dateNaissance;
+
+    /**
      * @var \AppBundle\Entity\Tarif
      *
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Tarif", cascade={"persist"})
@@ -58,7 +72,7 @@ class Billet
     private $tarif;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Commande", inversedBy="billets")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Commande", inversedBy="billets", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $commande;
@@ -215,5 +229,53 @@ class Billet
     public function getCommande()
     {
         return $this->commande;
+    }
+
+    /**
+     * Set pays
+     *
+     * @param string $pays
+     *
+     * @return Billet
+     */
+    public function setPays($pays)
+    {
+        $this->pays = $pays;
+
+        return $this;
+    }
+
+    /**
+     * Get pays
+     *
+     * @return string
+     */
+    public function getPays()
+    {
+        return $this->pays;
+    }
+
+    /**
+     * Set dateNaissance
+     *
+     * @param \DateTime $dateNaissance
+     *
+     * @return Billet
+     */
+    public function setDateNaissance($dateNaissance)
+    {
+        $this->dateNaissance = $dateNaissance;
+
+        return $this;
+    }
+
+    /**
+     * Get dateNaissance
+     *
+     * @return \DateTime
+     */
+    public function getDateNaissance()
+    {
+        return $this->dateNaissance;
     }
 }

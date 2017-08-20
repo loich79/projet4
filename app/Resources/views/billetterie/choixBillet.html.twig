@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+{% block title %}Choix des billets - Billetterie{% endblock %}
+{% block content %}
+<h3>Formulaire billet</h3>
+
+<div class="well">
+    {{ form_start(formBillet, {'attr': {'class': 'form-horizontal'}}) }}
+
+    {# Les erreurs générales du formulaire. #}
+    {{ form_errors(formBillet) }}
+
+
+    {# Génération manuelle et éclatée : #}
+    <div class="form-group">
+        {# Génération du label. #}
+        {{ form_label(formBillet.dateVisite, "Date de la Visite", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+
+        {# Affichage des erreurs pour ce champ précis. #}
+        {{ form_errors(formBillet.dateVisite) }}
+
+        <div class="col-sm-10">
+            {# Génération de l'input. #}
+            {{ form_widget(formBillet.dateVisite) }}
+        </div>
+    </div>
+
+    {# Idem pour un autre champ. #}
+    <div class="form-group">
+        {{ form_label(formBillet.type, "Type de Billet", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+        {{ form_errors(formBillet.type) }}
+        <div class="col-sm-10">
+            {{ form_widget(formBillet.type) }}
+        </div>
+    </div>
+
+    <div class="form-group">
+        {{ form_label(formBillet.commande.nombreBillets, "Nombre de billets", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+        {{ form_errors(formBillet.commande.nombreBillets) }}
+        <div class="col-sm-1">
+            {{ form_widget(formBillet.commande.nombreBillets) }}
+        </div>
+    </div>
+
+
+    {# Pour le bouton, pas de label ni d'erreur, on affiche juste le widget #}
+    {{ form_widget(formBillet.Suivant, {'attr': {'class': 'btn btn-primary'}}) }}
+
+
+    {# Fermeture de la balise <form> du formulaire HTML #}
+    {{ form_end(formBillet) }}
+</div>
+
+
+{% endblock %}

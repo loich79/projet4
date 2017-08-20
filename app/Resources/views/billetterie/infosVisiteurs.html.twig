@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h2>Informations Visiteurs</h2>
+    <p>Récapitulatif des choix précédents : </p>
+    <ul class="list-unstyled">
+        <li>Date de visite : {{ app.session.get('dateVisite') |date("d/m/Y") }} </li>
+        {% if app.session.get('type') == 'journee'%}
+            <li>Type de billets : Journée </li>
+        {% elseif app.session.get('type') == 'demi-journee' %}
+            <li>Type de billets : Demi-journée </li>
+        {% endif %}
+        <li>Nombre de billets : {{ app.session.get('nombreBillets') }}</li>
+    </ul>
+    <a href="{{  path('choix-billet-billetterie') }}">Modifier</a>
+{% endblock %}
+
+{% block title %}
+    Choix des billets - Billetterie
+{% endblock %}
+
