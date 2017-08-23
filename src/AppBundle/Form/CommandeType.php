@@ -3,6 +3,7 @@
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -15,7 +16,12 @@ class CommandeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('email', EmailType::class)->add('nombreBillets', IntegerType::class, array('attr' => array('min' =>  0)));
+        $builder->add('email', EmailType::class)
+            ->add('nombreBillets', IntegerType::class, array('attr' => array('min' =>  0)))
+            ->add('billets', CollectionType::class, array(
+                'entry_type' => BilletType::class,
+                'allow_add' => true
+            ));
     }
     
     /**

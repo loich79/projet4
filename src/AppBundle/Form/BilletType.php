@@ -3,6 +3,8 @@
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
@@ -25,8 +27,10 @@ class BilletType extends AbstractType
         ))
             ->add('nom')
             ->add('prenom')
-            ->add('pays', CountryType::class)
-            ->add('dateNaissance', DateType::class)
+            ->add('pays', CountryType::class, array(
+                'data' => 'FR'
+            ))
+            ->add('dateNaissance', BirthdayType::class)
             ->add('type',ChoiceType::class, array(
                     'choices'  => array(
                         'Journée' => 'journee',
@@ -37,7 +41,7 @@ class BilletType extends AbstractType
                     'data' => "journee"
                 )
             )
-            ->add('tarif')
+            ->add('tarifReduit', CheckboxType::class, array('required' => false))
             ->add('commande', CommandeType::class)
             ->add('Suivant', SubmitType::class);
     }

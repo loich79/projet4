@@ -13,7 +13,7 @@ class BilletPremierePageType extends AbstractType
     {
         $builder->remove('nom')
             ->remove('prenom')
-            ->remove('tarif')
+            ->remove('tarifReduit')
             ->remove('pays')
             ->remove('dateNaissance')
             ->remove('commande')

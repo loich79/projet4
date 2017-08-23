@@ -65,11 +65,18 @@ class Billet
     private $dateNaissance;
 
     /**
-     * @var \AppBundle\Entity\Tarif
+     * @var int
      *
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Tarif", cascade={"persist"})
+     * @ORM\Column(name="tarif", type="integer")
      */
     private $tarif;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="tarif_reduit", type="boolean", options={"default":false} )
+     */
+    private $tarifReduit;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Commande", inversedBy="billets", cascade={"persist"})
@@ -186,11 +193,11 @@ class Billet
     /**
      * Set tarif
      *
-     * @param \AppBundle\Entity\Tarif $tarif
+     * @param int $tarif
      *
      * @return Billet
      */
-    public function setTarif(Tarif $tarif = null)
+    public function setTarif(int $tarif = null)
     {
         $this->tarif = $tarif;
 
@@ -200,7 +207,7 @@ class Billet
     /**
      * Get tarif
      *
-     * @return \AppBundle\Entity\Tarif
+     * @return \int
      */
     public function getTarif()
     {
@@ -277,5 +284,29 @@ class Billet
     public function getDateNaissance()
     {
         return $this->dateNaissance;
+    }
+
+    /**
+     * Set tarifReduit
+     *
+     * @param boolean $tarifReduit
+     *
+     * @return Billet
+     */
+    public function setTarifReduit($tarifReduit)
+    {
+        $this->tarifReduit = $tarifReduit;
+
+        return $this;
+    }
+
+    /**
+     * Get tarifReduit
+     *
+     * @return boolean
+     */
+    public function getTarifReduit()
+    {
+        return $this->tarifReduit;
     }
 }
