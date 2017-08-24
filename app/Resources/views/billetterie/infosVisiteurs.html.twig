@@ -4,15 +4,19 @@
     <h2>Informations Visiteurs</h2>
     <h3>Récapitulatif des choix précédents : </h3>
     <ul class="list-unstyled">
-        <li>Date de visite : {{ app.session.get('dateVisite') |date("d/m/Y") }} </li>
-        {% if app.session.get('type') == 'journee'%}
+        <li>Date de visite : {{ app.session.get('commande').dateVisite |date("d/m/Y") }} </li>
+        {% if app.session.get('commande').type == 'journee'%}
             <li>Type de billets : Journée </li>
-        {% elseif app.session.get('type') == 'demi-journee' %}
+        {% elseif app.session.get('commande').type == 'demi-journee' %}
             <li>Type de billets : Demi-journée </li>
         {% endif %}
-        <li>Nombre de billets : {{ app.session.get('nombreBillets') }}</li>
+        <li>Nombre de billets : {{ app.session.get('commande').nombreBillets }}</li>
     </ul>
     <a href="{{  path('choix-billet-billetterie') }}">Modifier</a>
+    {# On affiche tous les messages flash dont le nom est « erreur » #}
+    {% for message in app.session.flashbag.get('erreur') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
     <h3>Informations pour la commande </h3>
     {{ form_start(formCommande)}}
     {# Les erreurs générales du formulaire. #}
@@ -33,21 +37,21 @@
         </div>
     </div>
     <h3>Informations Visiteurs</h3>
-    <div class="form-group">
-        {# Affichage des erreurs pour ce champ précis. #}
-        {{ form_errors(formCommande.billets) }}
 
-        <div class="col-sm-12">
-            {# Génération de l'input. #}
-            {{ form_widget(formCommande.billets) }}
+    {% for billet in formCommande.billets %}
+    <div class="form-group">
+        <h4>Billet n° {{ loop.index }}</h4>
+        {{ form_widget(billet) }}
+    </div>
+    {% endfor %}
+
+    <div>
+        <div class="form-group col-sm-6">
+            {# Pour le bouton, pas de label ni d'erreur, on affiche juste le widget #}
+            {{ form_widget(formCommande.paiement, {'attr': {'class': 'btn btn-primary'}}) }}
         </div>
     </div>
 
-    <a href="#" id="add_billet" class="btn btn-default">Ajouter un billet</a>
-    <div class="form-group">
-        {# Pour le bouton, pas de label ni d'erreur, on affiche juste le widget #}
-        {{ form_widget(formCommande.paiement, {'attr': {'class': 'btn btn-primary'}}) }}
-    </div>
     {{ form_end(formCommande)}}
 {% endblock %}
 
@@ -55,79 +59,5 @@
     Choix des billets - Billetterie
 {% endblock %}
 
-{% block javascripts %}
 
-{# On charge la bibliothèque jQuery. Ici, je la prends depuis le CDN google
-   mais si vous l'avez en local, changez simplement l'adresse. #}
-<script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-{# Voici le script en question : #}
-<script type="text/javascript">
-    $(document).ready(function() {
-        // récupère la balise <div> contenant « data-prototype »
-        var $container = $('div#commande_deuxieme_page_billets');
-
-        // définit un compteur unique pour nommer les champs
-        var index = $container.find(':input').length;
-
-        // ajoute un nouveau formulaire à chaque clic sur le lien d'ajout.
-        $('#add_billet').click(function(e) {
-            if (index < {{ app.session.get('nombreBillets') }}) {
-                addBillet($container);
-                if (index === {{ app.session.get('nombreBillets') }}) {
-                    $('#add_billet').remove();
-                }
-            }
-            e.preventDefault(); // évite qu'un # apparaisse dans l'URL
-            return false;
-        });
-        // On ajoute un premier champ automatiquement s'il n'en existe pas déjà un (cas d'une nouvelle annonce par exemple).
-        if (index == 0) {
-            addBillet($container);
-            if (index === {{ app.session.get('nombreBillets') }}) {
-                $('#add_billet').remove();
-            }
-        }
-        // La fonction qui ajoute un formulaire CategoryType
-        function addBillet($container) {
-            // Dans le contenu de l'attribut « data-prototype », on remplace :
-            // - le texte "__name__label__" qu'il contient par le label du champ
-            // - le texte "__name__" qu'il contient par le numéro du champ
-            var template = $container.attr('data-prototype')
-                .replace(/__name__label__/g, 'Billet n°' + (index+1))
-                .replace(/__name__/g,        index)
-            ;
-
-            // On crée un objet jquery qui contient ce template
-            var $prototype = $(template);
-
-            // On ajoute au prototype un lien pour pouvoir supprimer la catégorie
-            //addDeleteLink($prototype);
-
-            // On ajoute le prototype modifié à la fin de la balise <div>
-            $container.append($prototype);
-
-            // Enfin, on incrémente le compteur pour que le prochain ajout se fasse avec un autre numéro
-            index++;
-        }
-
-        // La fonction qui ajoute un lien de suppression d'une catégorie
-        /*function addDeleteLink($prototype) {
-            // Création du lien
-            var $deleteLink = $('<a href="#" class="btn btn-danger">Supprimer</a>');
-
-            // Ajout du lien
-            $prototype.append($deleteLink);
-
-            // Ajout du listener sur le clic du lien pour effectivement supprimer la catégorie
-            $deleteLink.click(function(e) {
-                $prototype.remove();
-
-                e.preventDefault(); // évite qu'un # apparaisse dans l'URL
-                return false;
-            });
-        }*/
-    });
-</script>
-{% endblock %}
 

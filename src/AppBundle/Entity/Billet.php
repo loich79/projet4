@@ -3,7 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use AppBundle\Entity\Tarif;
+
 
 /**
  * Billet
@@ -22,12 +22,6 @@ class Billet
      */
     private $id;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_visite", type="date")
-     */
-    private $dateVisite;
 
     /**
      * @var string
@@ -43,12 +37,6 @@ class Billet
      */
     private $prenom;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="type", type="string", length=255)
-     */
-    private $type;
 
     /**
      * @var string
@@ -94,29 +82,6 @@ class Billet
         return $this->id;
     }
 
-    /**
-     * Set dateVisite
-     *
-     * @param \DateTime $dateVisite
-     *
-     * @return Billet
-     */
-    public function setDateVisite($dateVisite)
-    {
-        $this->dateVisite = $dateVisite;
-
-        return $this;
-    }
-
-    /**
-     * Get dateVisite
-     *
-     * @return \DateTime
-     */
-    public function getDateVisite()
-    {
-        return $this->dateVisite;
-    }
 
     /**
      * Set nom
@@ -164,30 +129,6 @@ class Billet
     public function getPrenom()
     {
         return $this->prenom;
-    }
-
-    /**
-     * Set type
-     *
-     * @param string $type
-     *
-     * @return Billet
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**

@@ -10,4 +10,13 @@ namespace AppBundle\Repository;
  */
 class BilletRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function countNombreBillets( \DateTime $date)
+    {
+        return $this->createQueryBuilder('b')
+            ->select('COUNT(b.nom) AS nombreBillets')
+            ->where('b.dateVisite = :date')
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getSingleResult();
+    }
 }

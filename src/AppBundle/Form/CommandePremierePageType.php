@@ -11,7 +11,8 @@ class CommandePremierePageType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->remove('email')->remove('billets');
+        $builder->remove('email')
+            ->remove('billets');
     }
     public function getParent()
     {

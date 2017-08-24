@@ -29,7 +29,7 @@ class Commande
     private $dateReservation;
 
     /**
-     * @var string
+     * @var int
      *
      * @ORM\Column(name="nombre_billets", type="integer")
      */
@@ -55,6 +55,20 @@ class Commande
      * @ORM\Column(name="email", type="string", length=255)
      */
     private $email;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_visite", type="date")
+     */
+    private $dateVisite;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="type", type="string", length=255)
+     */
+    private $type;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Billet", mappedBy="commande", cascade={"persist"})
@@ -184,6 +198,7 @@ class Commande
     public function addBillet(\AppBundle\Entity\Billet $billet)
     {
         $this->billets[] = $billet;
+        $billet->setCommande($this);
 
         return $this;
     }
@@ -230,5 +245,53 @@ class Commande
     public function getEmail()
     {
         return $this->email;
+    }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     *
+     * @return Commande
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set dateVisite
+     *
+     * @param \DateTime $dateVisite
+     *
+     * @return Commande
+     */
+    public function setDateVisite($dateVisite)
+    {
+        $this->dateVisite = $dateVisite;
+
+        return $this;
+    }
+
+    /**
+     * Get dateVisite
+     *
+     * @return \DateTime
+     */
+    public function getDateVisite()
+    {
+        return $this->dateVisite;
     }
 }
