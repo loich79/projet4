@@ -36,7 +36,7 @@ class CommandeType extends AbstractType
                 )
             )
             ->add('email', EmailType::class)
-            ->add('nombreBillets', IntegerType::class, array('attr' => array('min' =>  1)))
+            ->add('nombreBillets', IntegerType::class, array('attr' => array('min' =>  1, 'max' => 10)))
             ->add('billets', CollectionType::class, array(
                 'entry_type' => BilletType::class,
                 'allow_add' => true

@@ -2,8 +2,10 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Validator\Constraints as BilletAssert;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Billet
@@ -27,6 +29,7 @@ class Billet
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $nom;
 
@@ -34,6 +37,7 @@ class Billet
      * @var string
      *
      * @ORM\Column(name="prenom", type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $prenom;
 
@@ -42,13 +46,16 @@ class Billet
      * @var string
      *
      * @ORM\Column(name="pays", type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $pays;
 
     /**
-     * @var string
+     * @var \DateTime
      *
      * @ORM\Column(name="date_naissance", type="date")
+     *
+     * @BilletAssert\DateNaissance()
      */
     private $dateNaissance;
 
@@ -56,6 +63,7 @@ class Billet
      * @var int
      *
      * @ORM\Column(name="tarif", type="integer")
+     * @BilletAssert\Tarif()
      */
     private $tarif;
 
@@ -63,12 +71,14 @@ class Billet
      * @var boolean
      *
      * @ORM\Column(name="tarif_reduit", type="boolean", options={"default":false} )
+     * @Assert\Type("bool")
      */
     private $tarifReduit;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Commande", inversedBy="billets", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\Valid()
      */
     private $commande;
 
@@ -250,4 +260,5 @@ class Billet
     {
         return $this->tarifReduit;
     }
+
 }

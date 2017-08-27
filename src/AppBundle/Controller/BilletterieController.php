@@ -38,16 +38,11 @@ class BilletterieController extends Controller
         $formCommande = $this->get('form.factory')->create(CommandePremierePageType::class, $commande);
         // test la methode de request et les contenus des champs du formulaire
         if($request->isMethod('POST') && $formCommande->handleRequest($request)->isValid()) {
-            // teste la date
-            if($this->verifierDate($commande->getDateVisite())) {
-                // A Faire : teste le nombre de billets restants pour la date selectionnée
-                // crée la variable de session commande contenant la commande
-                $this->get("session")->set('commande', $commande);
-                // redirige vers la seconde page du tunnel
-                return $this->redirectToRoute('infos-visiteurs-billetterie');
-
-            }
-
+            // A Faire : teste le nombre de billets restants pour la date selectionnée
+            // crée la variable de session commande contenant la commande
+            $this->get("session")->set('commande', $commande);
+            // redirige vers la seconde page du tunnel
+            return $this->redirectToRoute('infos-visiteurs-billetterie');
         }
         return $this->render('billetterie/choixBillet.html.twig', array(
             'formCommande' => $formCommande->createView(),
@@ -71,20 +66,16 @@ class BilletterieController extends Controller
                 $billet = new Billet();
                 $commande->addBillet($billet);
             }
-            dump($this->get('session')->get('commande'));
         }
         $formCommande = $this->get('form.factory')->create(CommandeDeuxiemePageType::class, $commande);
         if ($request->isMethod('POST') && $formCommande->handleRequest($request)->isValid()) {
-            // enregistre la commande en variable de session
-            //$this->get('session')->set('commande', $commande);
+
             // ajoute les attributs non hydratés par le formulaire pour chaque billet ( dateVisite, type, tarifs et commande)
-            /*foreach ($commande->getBillets() as $billet) {
+            foreach ($commande->getBillets() as $billet) {
                 $billet->setTarif($this->determinerTarif($billet))
                     ->setCommande($commande);
                 $commande->setMontantTotal($commande->getMontantTotal() + $billet->getTarif());
-            }*/
-
-            dump($this->get('session')->get('commande'));
+            }
         }
         return $this->render('billetterie/infosVisiteurs.html.twig', array(
             'formCommande' => $formCommande->createView(),
@@ -115,34 +106,6 @@ class BilletterieController extends Controller
         return $tarif;
     }
 
-    /**
-     * Vérifie si la date est valide (condition : pas de jours passés, pas de mardi ni de dimanche et pas de jours fériés)
-     * @param $date
-     * @return bool
-     */
-    public function verifierDate($date)
-    {
-        $jour = date('D',$date->getTimestamp());
-        $annee = date('Y', $date->getTimestamp());
-        $today = new \DateTime();
-        if ($jour === 'Sun' || $jour === 'Tue') {
-            $this->get('session')->getFlashBag()->add('erreur', "Il n'est pas possible de réserver les mardis ni les dimanches ni les jours fériés !");
-            return false;
-        }
-        // récupère le tableau des jours fériés de l'année récupérée de la date
-        $joursFeries = self::getHolidays($annee);
-        foreach ($joursFeries as $jourFerie) {
-            if($date->getTimestamp() === $jourFerie) {
-                $this->get('session')->getFlashBag()->add('erreur', "Il n'est possible de réserver les mardis ni les dimanches ni les jours fériés !");
-                return false;
-            }
-        }
-        if($today->diff($date)->d < 0) {
-            $this->get('session')->getFlashBag()->add('erreur', "Il n'est pas possible de réserver pour un jour passé!");
-            return false;
-        }
-        return true;
-    }
 
     public function verifierDispoBillets($date) {
         // récupère le nombre de billets réservés pour la date passée en argument
@@ -159,41 +122,5 @@ class BilletterieController extends Controller
         // si le nombre de billets reservés est inférieur a 1000, on retourne true
         return true;
     }
-    /**
-     * This function returns an array of timestamp corresponding to french holidays
-     * function found at http://php.net/manual/fr/function.easter-date.php
-     */
-    protected static function getHolidays($year = null)
-    {
-        if ($year === null)
-        {
-            $year = intval(date('Y'));
-        }
 
-        $easterDate  = easter_date($year);
-        $easterDay   = date('j', $easterDate);
-        $easterMonth = date('n', $easterDate);
-        $easterYear   = date('Y', $easterDate);
-
-        $holidays = array(
-            // These days have a fixed date
-            mktime(0, 0, 0, 1,  1,  $year),  // 1er janvier
-            mktime(0, 0, 0, 5,  1,  $year),  // Fête du travail
-            mktime(0, 0, 0, 5,  8,  $year),  // Victoire des alliés
-            mktime(0, 0, 0, 7,  14, $year),  // Fête nationale
-            mktime(0, 0, 0, 8,  15, $year),  // Assomption
-            mktime(0, 0, 0, 11, 1,  $year),  // Toussaint
-            mktime(0, 0, 0, 11, 11, $year),  // Armistice
-            mktime(0, 0, 0, 12, 25, $year),  // Noel
-
-            // These days have a date depending on easter
-            mktime(0, 0, 0, $easterMonth, $easterDay + 2,  $easterYear), // lundi de Pâques0
-            mktime(0, 0, 0, $easterMonth, $easterDay + 40, $easterYear), // jeudi de l'Ascension
-            mktime(0, 0, 0, $easterMonth, $easterDay + 50, $easterYear), // lundi de Pentecôte
-        );
-
-        sort($holidays);
-
-        return $holidays;
-    }
 }

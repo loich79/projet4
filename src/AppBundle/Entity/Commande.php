@@ -3,6 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Validator\Constraints as CommandeAssert;
 
 /**
  * Commande
@@ -25,6 +27,7 @@ class Commande
      * @var \DateTime
      *
      * @ORM\Column(name="date_reservation", type="date")
+     * @Assert\Date()
      */
     private $dateReservation;
 
@@ -32,6 +35,7 @@ class Commande
      * @var int
      *
      * @ORM\Column(name="nombre_billets", type="integer")
+     * @Assert\Range(min="1", max="10", maxMessage="Au-delà de 10 billets vous devez contacter le musée pour réserver")
      */
     private $nombreBillets;
 
@@ -39,20 +43,26 @@ class Commande
      * @var int
      *
      * @ORM\Column(name="montant_total", type="integer")
+     * @Assert\Range(min="0")
      */
     private $montantTotal;
 
     /**
- * @var string
- *
- * @ORM\Column(name="code_reservation", type="string", length=255)
- */
+     * @var string
+     *
+     * @ORM\Column(name="code_reservation", type="string", length=255)
+     * @Assert\NotBlank()
+     */
     private $codeReservation;
 
     /**
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255)
+     * @Assert\Email(
+     *     message = "L'adresse email '{{ value }}' n'est pas une adresse email valide.",
+     *     checkMX = true
+     * )
      */
     private $email;
 
@@ -60,6 +70,7 @@ class Commande
      * @var \DateTime
      *
      * @ORM\Column(name="date_visite", type="date")
+     * @CommandeAssert\DateVisite()
      */
     private $dateVisite;
 
@@ -67,11 +78,13 @@ class Commande
      * @var string
      *
      * @ORM\Column(name="type", type="string", length=255)
+     * @CommandeAssert\Type()
      */
     private $type;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Billet", mappedBy="commande", cascade={"persist"})
+     * @Assert\Valid()
      */
     private $billets;
 
