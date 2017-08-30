@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h2>Le musée du Louvre vous remercie pour votre réservation et vous souhaite une bonne visite !</h2>
+    <p>Un email vient de vous être envoyé, il fait office de billet et vous sera demandé à l'entrée.</p>
+    <p>Pensez à vous munir des pièces d'identité de chaque visiteur et si besoin des justificatifs pour les billets bénéficiant du tarif réduit.</p>
+    <a href="{{ path('affichage-email') }}">voir l'e-mail</a>
+{% endblock %}
+
+{% block title %}
+    Confirmation de paiement - Billetterie
+{% endblock %}

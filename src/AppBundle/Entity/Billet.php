@@ -63,7 +63,6 @@ class Billet
      * @var int
      *
      * @ORM\Column(name="tarif", type="integer")
-     * @BilletAssert\Tarif()
      */
     private $tarif;
 
@@ -147,6 +146,7 @@ class Billet
      * @param int $tarif
      *
      * @return Billet
+     *
      */
     public function setTarif(int $tarif = null)
     {

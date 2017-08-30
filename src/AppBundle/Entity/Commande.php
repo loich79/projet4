@@ -51,7 +51,6 @@ class Commande
      * @var string
      *
      * @ORM\Column(name="code_reservation", type="string", length=255)
-     * @Assert\NotBlank()
      */
     private $codeReservation;
 
@@ -176,6 +175,7 @@ class Commande
      * @param string $codeReservation
      *
      * @return Commande
+     *
      */
     public function setCodeReservation($codeReservation)
     {
