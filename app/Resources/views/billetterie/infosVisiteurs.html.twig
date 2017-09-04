@@ -3,16 +3,21 @@
 {% block content %}
     <h2>Informations Visiteurs</h2>
     <h3>Récapitulatif des choix précédents : </h3>
+    {% for message in app.session.flashbag.get('notice') %}
+        <div class="alert alert-info">{{ message }}</div>
+    {% endfor %}
     <ul class="list-unstyled">
         <li>Date de visite : {{ app.session.get('commande').dateVisite |date("d/m/Y") }} </li>
-        {% if app.session.get('commande').type == 'journee'%}
-            <li>Type de billets : Journée </li>
-        {% elseif app.session.get('commande').type == 'demi-journee' %}
-            <li>Type de billets : Demi-journée </li>
-        {% endif %}
+        <li>
+            {% if app.session.get('commande').type == 'journee'%}
+                Type de billets : Journée
+            {% elseif app.session.get('commande').type == 'demi-journee' %}
+                Type de billets : Demi-journée
+            {% endif %}
+        </li>
         <li>Nombre de billets : {{ app.session.get('commande').nombreBillets }}</li>
     </ul>
-    <a href="{{  path('choix-billet-billetterie') }}">Modifier</a>
+    <a href="{{  path('choix-visite-billetterie') }}">Modifier</a>
     {# On affiche tous les messages flash dont le nom est « erreur » #}
     {% for message in app.session.flashbag.get('erreur') %}
         <div class="alert alert-danger">{{ message }}</div>

@@ -55,7 +55,7 @@ class Billet
      *
      * @ORM\Column(name="date_naissance", type="date")
      *
-     * @BilletAssert\DateNaissance()
+     * @Assert\LessThan("today")
      */
     private $dateNaissance;
 

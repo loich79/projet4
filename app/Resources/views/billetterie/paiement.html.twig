@@ -15,7 +15,7 @@
         {% endif %}
         <li>Nombre de billets : {{ app.session.get('commande').nombreBillets }}</li>
     </ul>
-
+    <a href="{{  path('choix-visite-billetterie') }}">Modifier</a>
     <h3>Billets</h3>
 
     {% for billet in app.session.get('commande').billets %}
@@ -28,15 +28,15 @@
     <div>
         <p>Montant total : {{ app.session.get('commande').montantTotal }} €</p>
     </div>
-    <a href="{{  path('choix-billet-billetterie') }}">Modifier</a>
+    <a href="{{  path('infos-visiteurs-billetterie') }}">Modifier</a>
 
     <form action="{{ path('retour-paiement-billetterie') }}" method="POST">
         <script
                 src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                 data-key="pk_test_Dyzokz6lSCgTFBddF8lAAxir"
                 data-amount="{{ app.session.get('commande').montantTotal }}00"
-                data-name="oc-stripe"
-                data-description="Widget"
+                data-name="Billetterie"
+                data-description="Louvre"
                 data-locale="auto"
                 data-currency="eur">
         </script>

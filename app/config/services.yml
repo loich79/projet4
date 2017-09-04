@@ -38,6 +38,28 @@ services:
     #calculateur de tarif
     app.calculateurtarif:
         class: AppBundle\Utils\CalculateurTarif
+        public: true
 
-    AppBundle\Utils\CalculateurTarif:
-        public: false
+    #correcteur de type de billet
+    app.correcteurtype:
+        class: AppBundle\Utils\CorrecteurType
+        public: true
+        arguments:
+           - '@session'
+
+    #vérificateur de disponibilité de billets
+    app.verificateurdispobillets:
+        class: AppBundle\Utils\VerificateurDispoBillets
+        public: true
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@session'
+
+    #gestionnaire de commande
+    app.gestionnairecommande:
+        class: AppBundle\Utils\GestionnaireCommande
+        public: true
+        arguments:
+            - '@session'
+            - '@app.calculateurtarif'
+            - '@app.correcteurtype'

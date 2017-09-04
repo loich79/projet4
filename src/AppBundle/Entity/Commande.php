@@ -88,6 +88,13 @@ class Commande
     private $billets;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="email_sent", type="boolean", options={"default":false})
+     */
+    private $emailSent;
+
+    /**
      * Get id
      *
      * @return int
@@ -306,5 +313,29 @@ class Commande
     public function getDateVisite()
     {
         return $this->dateVisite;
+    }
+
+    /**
+     * Set emailSent
+     *
+     * @param boolean $emailSent
+     *
+     * @return Commande
+     */
+    public function setEmailSent($emailSent)
+    {
+        $this->emailSent = $emailSent;
+
+        return $this;
+    }
+
+    /**
+     * Get emailSent
+     *
+     * @return boolean
+     */
+    public function getEmailSent()
+    {
+        return $this->emailSent;
     }
 }

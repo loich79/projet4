@@ -19,12 +19,13 @@
         {# Génération du label. #}
         {{ form_label(formCommande.dateVisite, "Date de la Visite", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
 
-        {# Affichage des erreurs pour ce champ précis. #}
-        {{ form_errors(formCommande.dateVisite) }}
-
-        <div class="col-sm-10">
+        <div class="col-sm-3">
             {# Génération de l'input. #}
-            {{ form_widget(formCommande.dateVisite) }}
+            {{ form_widget(formCommande.dateVisite)}}
+        </div>
+        <div class="col-sm-7">
+            {# Affichage des erreurs pour ce champ précis. #}
+            {{ form_errors(formCommande.dateVisite) }}
         </div>
     </div>
 

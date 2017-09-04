@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+
 class BilletterieController extends Controller
 {
     /**
@@ -29,61 +30,45 @@ class BilletterieController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @route("/choix-billet", name="choix-billet-billetterie")
+     * @route("/choix-visite", name="choix-visite-billetterie")
      *
      */
 
-    public function choixBilletAction(Request $request)
+    public function choixVisiteAction(Request $request)
     {
         // cree la commande
         $commande = new Commande();
-        // crée
+        // crée le formulaire pour la commande
         $formCommande = $this->get('form.factory')->create(CommandePremierePageType::class, $commande);
-        // test la methode de request et les contenus des champs du formulaire
-        if($request->isMethod('POST') && $formCommande->handleRequest($request)->isValid() && $this->verifierDispoBillets($commande->getDateVisite())) {
-            // A Faire : teste le nombre de billets restants pour la date selectionnée
-            // crée la variable de session commande contenant la commande
-            $this->get("session")->set('commande', $commande);
+        // test la methode de request et les contenus des champs du formulaire et la dispo des billets pour la date selectionnée
+        if($request->isMethod('POST') && $formCommande->handleRequest($request)->isValid()
+            && $this->get('app.verificateurdispobillets')->verifierDispoBillets($commande->getDateVisite())) {
+            // traitement sur la commande : correction automatique du type et ajout de la commande en session
+            $this->get('app.gestionnairecommande')->traiterCommandePageChoixVisite($commande);
             // redirige vers la seconde page du tunnel
             return $this->redirectToRoute('infos-visiteurs-billetterie');
         }
-        return $this->render('billetterie/choixBillet.html.twig', array(
+        return $this->render('Billetterie/choixVisite.html.twig', array(
             'formCommande' => $formCommande->createView(),
         ));
     }
 
     /**
      * @param Request $request
-     * @param Session $session
-     * @param CalculateurTarif $calculateurTarif
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      *
      * @route("/infos-visiteurs", name="infos-visiteurs-billetterie")
      */
-    public function infosVisiteursAction(Request $request, Session $session, CalculateurTarif $calculateurTarif)
+    public function infosVisiteursAction(Request $request)
     {
-
-        //formulaire commande
         $commande = $this->get('session')->get('commande');
+        $gestionnaireCommande =  $this->get("app.gestionnairecommande");
         // réinitialise le montant total pour éviter les erreurs de calcul du montant total (ex: retour en arriere sur le navigateur)
-        $commande->setMontantTotal(0);
-        if($commande->getBillets()->count() != $commande->getNombreBillets()) {
-            for($billetACreer = 0; $billetACreer < $commande->getNombreBillets(); $billetACreer++ ) {
-                $billet = new Billet();
-                $commande->addBillet($billet);
-            }
-        }
-        dump($this->get('session')->get('commande'));
+        $gestionnaireCommande->initialiserCommandePageInfosVisiteurs($commande);
         $formCommande = $this->get('form.factory')->create(CommandeDeuxiemePageType::class, $commande);
         if ($request->isMethod('POST') && $formCommande->handleRequest($request)->isValid()) {
-            $formCommande->isValid();
             // ajoute les attributs non hydratés par le formulaire pour chaque billet ( dateVisite, type, tarifs et commande)
-            foreach ($commande->getBillets() as $billet) {
-                $billet->setTarif($calculateurTarif->determinerTarif($billet))
-                    ->setCommande($commande);
-                $commande->setMontantTotal($commande->getMontantTotal() + $billet->getTarif());
-            }
-            dump($this->get('session')->get('commande'));
+            $gestionnaireCommande->traiterCommandePageInfosVisiteurs($commande);
             return $this->redirectToRoute('paiement-billetterie');
         }
         return $this->render('billetterie/infosVisiteurs.html.twig', array(
@@ -123,12 +108,11 @@ class BilletterieController extends Controller
                 "amount" => ($this->get('session')->get('commande')->getMontantTotal()*100), // Amount in cents
                 "currency" => "eur",
                 "source" => $token,
-                "description" => "Paiement Stripe - OpenClassrooms Exemple"
+                "description" => "Paiement Billetterie du Louvre"
             ));
-            // ajoute le token comme code de réservation a la commande et la date du jour comme date de reservation
-            $codeReservation = str_replace('tok_','',$token);
-            $codeReservation = strtoupper($codeReservation);
-            $this->get('session')->get('commande')->setCodeReservation($codeReservation)->setDateReservation(new \DateTime());
+            // traitement sur la commande
+            $this->get('app.gestionnairecommande')->traiterCommandePageRetourPaiement($this->get('session')->get('commande'), $token);
+            // redirige sur la page confirmation de paiement
             return $this->redirectToRoute("confirmation-paiement-billetterie");
         } catch(\Stripe\Error\Card $e) {
 
@@ -147,16 +131,19 @@ class BilletterieController extends Controller
     public function confirmationPaiementAction(\Swift_Mailer $mailer)
     {
         $commande = $this->get('session')->get('commande');
-        //enregistre la commande en bdd
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($commande);
-        $em->flush();
-        //envoie du mail de confirmation
-        $message = (new \Swift_Message('confirmation de commande'))
-            ->setFrom('lhay17@gmail.com')
-            ->setTo($commande->getEmail())
-            ->setBody($this->renderView('Billetterie/Emails/confirmationCommande.html.twig'),'text/html');
-        $mailer->send($message);
+        if(!$commande->getEmailSent()) {
+            //envoie du mail de confirmation
+            $message = (new \Swift_Message('confirmation de commande'))
+                ->setFrom('lhay17@gmail.com')
+                ->setTo($commande->getEmail())
+                ->setBody($this->renderView('Billetterie/Emails/confirmationCommande.html.twig'), 'text/html');
+            $mailer->send($message);
+            $commande->setEmailSent(true);
+            //enregistre la commande en bdd
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($commande);
+            $em->flush();
+        }
         // affiche la page de confirmation de paiement
         return $this->render('billetterie/confirmationPaiement.html.twig');
     }
@@ -169,26 +156,4 @@ class BilletterieController extends Controller
     {
         return $this->render('billetterie/Emails/confirmationCommande.html.twig');
     }
-
-    /**
-     * @param $date
-     * @return bool
-     */
-    public function verifierDispoBillets($date) {
-        // récupère le nombre de billets réservés pour la date passée en argument
-        $nbBilletsReserves = $this->getDoctrine()->getRepository('AppBundle:Billet')->countNombreBillets($date);
-        dump($nbBilletsReserves);
-        // si le nombre de billets reservés est supérieur a 1000, on retourne false
-        if($nbBilletsReserves >= 1000) {
-            $this->get('session')->getFlashBag()->add('erreur', "Tous les billets pour cette date on été vendu veuillez selectionner une autre date !");
-            return false;
-        }
-        // si il ne reste que 10 billets on crée un message flash pour prévenir l'utilisateur
-        if ($nbBilletsReserves >= 990 && $nbBilletsReserves < 1000) {
-            $this->get('session')->getFlashBag()->add('warningNbBillets', "Attention, il ne reste que quelques billets pour cette date, il est possible que la commande ne puisse être validé ! ");
-        }
-        // si le nombre de billets reservés est inférieur a 1000, on retourne true
-        return true;
-    }
-
 }
