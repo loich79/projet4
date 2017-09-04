@@ -43,6 +43,7 @@ class Commande
      * @var int
      *
      * @ORM\Column(name="montant_total", type="integer")
+     *
      * @Assert\Range(min="0")
      */
     private $montantTotal;
@@ -58,6 +59,7 @@ class Commande
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255)
+     *
      * @Assert\Email(
      *     message = "L'adresse email '{{ value }}' n'est pas une adresse email valide.",
      *     checkMX = true
@@ -69,7 +71,12 @@ class Commande
      * @var \DateTime
      *
      * @ORM\Column(name="date_visite", type="date")
-     * @CommandeAssert\DateVisite()
+     *
+     * @CommandeAssert\DatePassee()
+     * @CommandeAssert\JourFerie()
+     * @CommandeAssert\Dimanche()
+     * @CommandeAssert\Mardi()
+     * @CommandeAssert\HeureFermeture()
      */
     private $dateVisite;
 
@@ -83,6 +90,7 @@ class Commande
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Billet", mappedBy="commande", cascade={"persist"})
+     *
      * @Assert\Valid()
      */
     private $billets;
