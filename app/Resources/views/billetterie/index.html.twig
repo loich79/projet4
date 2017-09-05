@@ -1,34 +1,52 @@
 {% extends 'base.html.twig' %}
 {% block title %}Accueil - Billetterie{% endblock %}
 {% block content %}
-    <h2>Horaires</h2>
-    <p>
-        Le musée est ouvert tous les jours de 9h à 18h excepté le mardi (fermeture des salles à partir de 17h30).
-    </p>
-    <h2 class="orange-background">Accès</h2>
-    <ul>
-        <li>Les accès par la Pyramide et la galerie du Carrousel : ouvert tous les jours sauf le mardi, de 9h à 19h30.</li>
-        <li>Passage Richelieu : ouvert tous les jours, sauf le mardi, de 9h à 17h30.</li>
-        <li>Porte des Lions : Cet accès est réservé aux visiteurs en groupe.</li>
-    </ul>
-
-    <h2>Tarifs</h2>
-    <p>
-        Le musée propose plusieurs types de tarifs :
-    </p>
-    <ul>
-        <li>Un tarif « normal » à partir de 12 ans à 16 €.</li>
-        <li>Un tarif « enfant » à partir de 4 ans et jusqu’à 12 ans, à 8 € (l’entrée est gratuite pour les enfants de moins de 4 ans).</li>
-        <li>Un tarif « senior » à partir de 60 ans pour 12  €.</li>
-        <li>Un tarif « réduit » de 10 € accordé dans certaines conditions (étudiant, employé du musée, d’un service du Ministère de la Culture, militaire…).</li>
-    </ul>
-    <h2>Réservation</h2>
-    <p>Vous pouvez réserver vos billets en ligne grace a notre service de billetterie.</p>
-    <p class="alert alert-info">La réservation n'est pas possible pour les mardis, les dimanches et les jours fériés.</p>
-    <div class="row">
-        <div class="col-xs-offset-5 col-xs-2">
-            <a id="btn-achat" class="btn btn-success" href="{{ path('choix-visite-billetterie') }}">Achetez vos billets</a>
+    <div></div>
+        <h2 class="text-center">Horaires</h2>
+        <p class="index-paragraph list-unstyled">
+            Le musée est ouvert tous les jours de 9h à 18h excepté le mardi.<br/>
+                (fermeture des salles à partir de 17h30
+        </p>
+        <p class="index-paragraph list-unstyled">
+            Le musée est ouvert en nocturne jusqu'à 21h45 le mercredi et le vendredi.<br/>
+            (fermeture des salles à partir de 21h30)
+        </p>
+        <h2 class="text-center">Accès</h2>
+        <div class="grey-background">
+            <p class="text-center">
+                <strong>Adresse</strong> : Musée du Louvre, 75058 Paris - France
+            </p><p class="text-center">
+                <strong>Téléphone </strong> : + 33 (0)1 40 20 53 17
+            </p>
         </div>
-    </div>
+        <p class="index-paragraph list-unstyled">
+            Les accès par la Pyramide et la galerie du Carrousel : ouvert tous les jours sauf le mardi, de 9h à 19h30 et jusqu'à 22h le mercredi et le vendredi.
+        </p>
+        <p class="index-paragraph list-unstyled">
+            Passage Richelieu : ouvert tous les jours, sauf le mardi, de 9h à 17h30 et jusqu’à 18h00 le mercredi et le vendredi.
+        </p>
+        <p class="index-paragraph list-unstyled">
+            Porte des Lions : Cet accès est réservé aux visiteurs en groupe.
+        </p>
+
+        <h2 class="text-center">Tarifs</h2>
+        <p class="index-paragraph">
+            Le musée propose plusieurs types de tarifs :
+        </p>
+        <ul class="index-paragraph">
+            <li>Un tarif « normal » à partir de 12 ans à 16 €.</li>
+            <li>Un tarif « enfant » à partir de 4 ans et jusqu’à 12 ans, à 8 € (l’entrée est gratuite pour les enfants de moins de 4 ans).</li>
+            <li>Un tarif « senior » à partir de 60 ans pour 12  €.</li>
+            <li>Un tarif « réduit » de 10 € accordé dans certaines conditions (étudiant, employé du musée, d’un service du Ministère de la Culture, militaire…).</li>
+        </ul>
+        <h2 class="text-center">Réservation</h2>
+        <p class="index-paragraph">Vous pouvez réserver vos billets en ligne grace à notre service de billetterie.</p>
+        <p class="alert alert-info text-center">La réservation n'est pas possible pour les mardis, les dimanches et les jours fériés.</p>
+        <div class="row">
+            <div class="col-xs-offset-4 col-xs-4">
+                <a id="btn-achat" class="btn" href="{{ path('choix-visite-billetterie') }}">Achetez vos billets</a>
+            </div>
+        </div>
+    </div
 {% endblock %}
 

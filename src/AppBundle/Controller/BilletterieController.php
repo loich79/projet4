@@ -23,6 +23,7 @@ class BilletterieController extends Controller
      */
     public function indexAction(Request $request)
     {
+        // affiche le page index.html.twig
         return $this->render('billetterie/index.html.twig');
     }
 
@@ -48,6 +49,7 @@ class BilletterieController extends Controller
             // redirige vers la seconde page du tunnel
             return $this->redirectToRoute('infos-visiteurs-billetterie');
         }
+        // affiche la page choixVisite.html.twig
         return $this->render('Billetterie/choixVisite.html.twig', array(
             'formCommande' => $formCommande->createView(),
         ));
@@ -61,16 +63,23 @@ class BilletterieController extends Controller
      */
     public function infosVisiteursAction(Request $request)
     {
+        // récupère la commande depuis la session
         $commande = $this->get('session')->get('commande');
+        // instancie le gestionnaire de commande
         $gestionnaireCommande =  $this->get("app.gestionnairecommande");
         // réinitialise le montant total pour éviter les erreurs de calcul du montant total (ex: retour en arriere sur le navigateur)
+        // et ajoute les billets en fonction du nombre de billets selectionné a la page précédente
         $gestionnaireCommande->initialiserCommandePageInfosVisiteurs($commande);
+        // crée le formulaire pour la commande
         $formCommande = $this->get('form.factory')->create(CommandeDeuxiemePageType::class, $commande);
         if ($request->isMethod('POST') && $formCommande->handleRequest($request)->isValid()) {
             // ajoute les attributs non hydratés par le formulaire pour chaque billet ( dateVisite, type, tarifs et commande)
+            // et calcule le montant total
             $gestionnaireCommande->traiterCommandePageInfosVisiteurs($commande);
+            // redirige vers la page de paiement
             return $this->redirectToRoute('paiement-billetterie');
         }
+        // affiche la page infosVisiteurs.html.twig
         return $this->render('billetterie/infosVisiteurs.html.twig', array(
             'formCommande' => $formCommande->createView(),
         ));
@@ -85,24 +94,26 @@ class BilletterieController extends Controller
      */
     public function paiementAction(Request $request)
     {
+        // affiche la page paiement.html.twig
         return $this->render('billetterie/paiement.html.twig');
     }
 
     /**
      * @Route(
-     *     "/retour-paiment",
+     *     "/retour-paiement",
      *     name="retour-paiement-billetterie",
      *     methods="POST"
      * )
      */
     public function retourPaiementAction()
     {
+        // renseigne la clé secrète de stripe
         Stripe::setApiKey("sk_test_z8jlJCKrSKN0U59keBnd272U");
 
-        // Get the credit card details submitted by the form
+        // recupère le token de la transaction
         $token = $_POST['stripeToken'];
 
-        // Create a charge: this will charge the user's card
+        // Crée la facturation
         try {
             $charge = Charge::create(array(
                 "amount" => ($this->get('session')->get('commande')->getMontantTotal()*100), // Amount in cents
@@ -110,7 +121,7 @@ class BilletterieController extends Controller
                 "source" => $token,
                 "description" => "Paiement Billetterie du Louvre"
             ));
-            // traitement sur la commande
+            // traitement sur la commande : ajout du code de reservation et de la date de reservation
             $this->get('app.gestionnairecommande')->traiterCommandePageRetourPaiement($this->get('session')->get('commande'), $token);
             // redirige sur la page confirmation de paiement
             return $this->redirectToRoute("confirmation-paiement-billetterie");
@@ -130,7 +141,9 @@ class BilletterieController extends Controller
      */
     public function confirmationPaiementAction(\Swift_Mailer $mailer)
     {
+        // récupère la commande depuis la session
         $commande = $this->get('session')->get('commande');
+        // vérifie si l'email est envoyé (permet d'eviter le renvoi du mail en cas de retour arrière
         if(!$commande->getEmailSent()) {
             //envoie du mail de confirmation
             $message = (new \Swift_Message('confirmation de commande'))
@@ -138,13 +151,14 @@ class BilletterieController extends Controller
                 ->setTo($commande->getEmail())
                 ->setBody($this->renderView('Billetterie/Emails/confirmationCommande.html.twig'), 'text/html');
             $mailer->send($message);
+            // modifie l'indicateur de mail envoyé
             $commande->setEmailSent(true);
             //enregistre la commande en bdd
             $em = $this->getDoctrine()->getManager();
             $em->persist($commande);
             $em->flush();
         }
-        // affiche la page de confirmation de paiement
+        // affiche la page confirmationPaiement.html.twig
         return $this->render('billetterie/confirmationPaiement.html.twig');
     }
 
@@ -154,6 +168,7 @@ class BilletterieController extends Controller
      */
     public function affichageEmailAction()
     {
+        //affiche l'email
         return $this->render('billetterie/Emails/confirmationCommande.html.twig');
     }
 }

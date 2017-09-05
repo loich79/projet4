@@ -9,6 +9,7 @@ body {
 }
 .grey-background {
     background-color: rgb(78,78,78);
+    color: white;
 }
 .white-text {
     color: white;
@@ -21,6 +22,7 @@ body {
     color: white;
     height: 100px;
 }
+
 #logo {
     height: 50px;
     width: 165px;
@@ -33,11 +35,22 @@ body {
 /*contenu*/
 #content {
     background-color: white;
-    padding: 10px 5px 10px 5px;
+}
+h2 {
+    background-color: rgb(201,45,0);
+    color: white;
+    font-size: 1.6em;
+}
+.index-paragraph {
+    margin: 5px;
 }
 #btn-achat {
     display: block;
     margin : auto;
+    margin-bottom: 10px;
+    width: 150px;
+    background-color: #AAAAAA;
+    color: #222222;
 }
 .link-unstyled {
     color: inherit;
