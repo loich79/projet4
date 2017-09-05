@@ -1,6 +1,18 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    <link href="{{ asset('css/progress-wizard.css') }}" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+{% endblock %}
 {% block content %}
+    <div class="step-wizard">
+        <ul class="progress-indicator">
+            <li class="completed"> <span class="bubble"></span><i class="fa fa-check-circle" aria-hidden="true"></i> Votre visite </li>
+            <li class="completed"> <span class="bubble"></span><i class="fa fa-check-circle" aria-hidden="true"></i> vos billets </li>
+            <li class="completed"> <span class="bubble"></span><i class="fa fa-check-circle" aria-hidden="true"></i> paiement </li>
+            <li class="completed"> <span class="bubble"></span><i class="fa fa-check-circle" aria-hidden="true"></i> confirmation </li>
+        </ul>
+    </div>
     <h2>Le musée du Louvre vous remercie pour votre réservation et vous souhaite une bonne visite !</h2>
     <p>Un email vient de vous être envoyé, il fait office de billet et vous sera demandé à l'entrée.</p>
     <p>Pensez à vous munir des pièces d'identité de chaque visiteur et si besoin des justificatifs pour les billets bénéficiant du tarif réduit.</p>

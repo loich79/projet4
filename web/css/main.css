@@ -36,6 +36,9 @@ body {
 #content {
     background-color: white;
 }
+.step-wizard {
+    padding: 10px;
+}
 h2 {
     background-color: rgb(201,45,0);
     color: white;

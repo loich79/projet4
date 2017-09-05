@@ -1,6 +1,18 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    <link href="{{ asset('css/progress-wizard.css') }}" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+{% endblock %}
 {% block content %}
+    <div class="step-wizard">
+        <ul class="progress-indicator">
+            <li class="completed"> <span class="bubble"></span><i class="fa fa-check-circle" aria-hidden="true"></i> Votre visite </li>
+            <li class="completed"> <span class="bubble"></span><i class="fa fa-check-circle" aria-hidden="true"></i> vos billets </li>
+            <li class="completed"> <span class="bubble"></span> paiement </li>
+            <li> <span class="bubble"></span> confirmation </li>
+        </ul>
+    </div>
     <h2>Récapitulatif et paiement</h2>
     {% for message in app.session.flashbag.get('erreur') %}
         <div class="alert alert-danger">{{ message }}</div>
