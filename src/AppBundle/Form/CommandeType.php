@@ -23,7 +23,8 @@ class CommandeType extends AbstractType
         $date = new \DateTime();
         $builder->add('dateVisite', DateType::class, array(
                 'years' => array( $nowYear, $nowYear+1, $nowYear+2, $nowYear+3),
-                'data' => $date
+                'data' => $date,
+                'widget' => 'single_text'
             ))
             ->add('type',ChoiceType::class, array(
                     'choices'  => array(
