@@ -40,7 +40,7 @@
                     <div>
                         <p class="text-center"><strong>Date sélectionnée : </strong></p>
                         {{ form_widget(formCommande.dateVisite)}}
-                        <input type="text" id="date-selected">
+                        <input type="text" id="date-selected" value="{{ "now"|date("d/m/Y") }}" class="text-center">
                         {{ form_errors(formCommande.dateVisite) }}
                     </div>
                 </div>
@@ -121,10 +121,16 @@
         $('.radio label').addClass('btn');
         $('.radio label').css('width', '150px');
         $('.radio label').css('margin', '5px');
-        $('.radio label').css('background-color', 'rgb(201,45,0)');
+        $('.radio label').css('background-color', 'grey');
         $('.radio label').css('color', 'white');
-        $('#commande_premiere_page_type_0').onclick(function () {
-
+        $('#commande_premiere_page_type_0').parent().css('background-color', 'rgb(201,45,0)');
+        $('#commande_premiere_page_type_0').click(function () {
+            $(this).parent().css('background-color', 'rgb(201,45,0)');
+            $('#commande_premiere_page_type_1').parent().css('background-color', 'grey');
+        })
+        $('#commande_premiere_page_type_1').click(function () {
+            $(this).parent().css('background-color', 'rgb(201,45,0)')
+            $('#commande_premiere_page_type_0').parent().css('background-color', 'grey');
         })
     </script>
 {% endblock %}

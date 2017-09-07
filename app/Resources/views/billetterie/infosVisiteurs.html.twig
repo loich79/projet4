@@ -13,67 +13,134 @@
             <li> <span class="bubble"></span> confirmation </li>
         </ul>
     </div>
-    <h2>Informations Visiteurs</h2>
-    <h3>Récapitulatif des choix précédents : </h3>
-    {% for message in app.session.flashbag.get('notice') %}
-        <div class="alert alert-info">{{ message }}</div>
-    {% endfor %}
-    <ul class="list-unstyled">
-        <li>Date de visite : {{ app.session.get('commande').dateVisite |date("d/m/Y") }} </li>
-        <li>
-            {% if app.session.get('commande').type == 'journee'%}
-                Type de billets : Journée
-            {% elseif app.session.get('commande').type == 'demi-journee' %}
-                Type de billets : Demi-journée
-            {% endif %}
-        </li>
-        <li>Nombre de billets : {{ app.session.get('commande').nombreBillets }}</li>
-    </ul>
-    <a href="{{  path('choix-visite-billetterie') }}">Modifier</a>
-    {# On affiche tous les messages flash dont le nom est « erreur » #}
-    {% for message in app.session.flashbag.get('erreur') %}
-        <div class="alert alert-danger">{{ message }}</div>
-    {% endfor %}
-    <h3>Informations pour la commande </h3>
-    {{ form_start(formCommande)}}
-    {# Les erreurs générales du formulaire. #}
-    {{ form_errors(formCommande) }}
-
-
-    {# Génération manuelle et éclatée : #}
-    <div class="form-group">
-        {# Génération du label. #}
-        {{ form_label(formCommande.email, "Email", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
-
-        {# Affichage des erreurs pour ce champ précis. #}
-        {{ form_errors(formCommande.email) }}
-
-        <div class="col-sm-10">
-            {# Génération de l'input. #}
-            {{ form_widget(formCommande.email) }}
+    <h2 class="text-center">Informations Visiteurs</h2>
+    <div class="well">
+        <h3 class="text-center">Récapitulatif des choix précédents : </h3>
+        <div class="row text-center">
+        {% include 'billetterie/recapChoixVisite.html.twig' %}
         </div>
-    </div>
-    <h3>Informations Visiteurs</h3>
+        {# On affiche tous les messages flash dont le nom est « erreur » #}
+        {% for message in app.session.flashbag.get('erreur') %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
+        <h3 class="text-center">Informations pour la commande </h3>
+        {{ form_start(formCommande)}}
+        {# Les erreurs générales du formulaire. #}
+        {{ form_errors(formCommande) }}
 
-    {% for billet in formCommande.billets %}
-    <div class="form-group">
-        <h4>Billet n° {{ loop.index }}</h4>
-        {{ form_widget(billet) }}
-    </div>
-    {% endfor %}
 
-    <div>
-        <div class="form-group col-sm-6">
-            {# Pour le bouton, pas de label ni d'erreur, on affiche juste le widget #}
-            {{ form_widget(formCommande.paiement, {'attr': {'class': 'btn btn-primary'}}) }}
+        {# Génération manuelle et éclatée : #}
+        <div class="form-group well">
+            <div class="row text-center">
+                <div class="row">
+                {# Génération du label. #}
+                {{ form_label(formCommande.email.first, "Votre adresse email", {'label_attr': {'class': 'control-label'}}) }}
+                </div>
+                <div class="row">
+                    <div class="col-sm-offset-2 col-sm-8">
+                        {# Génération de l'input. #}
+                        {{ form_widget(formCommande.email.first) }}
+                    </div>
+                </div>
+                {# Affichage des erreurs pour ce champ précis. #}
+                {{ form_errors(formCommande.email.first) }}
+            </div>
+            <div class="row text-center">
+                <div class="row">
+                    {# Génération du label. #}
+                    {{ form_label(formCommande.email.second, "Confirmez votre adresse email", {'label_attr': {'class': 'control-label'}}) }}
+                </div>
+                <div class="row">
+                    <div class="col-sm-offset-2 col-sm-8">
+                        {# Génération de l'input. #}
+                        {{ form_widget(formCommande.email.second) }}
+                    </div>
+                </div>
+                {# Affichage des erreurs pour ce champ précis. #}
+                {{ form_errors(formCommande.email.second) }}
+            </div>
         </div>
-    </div>
 
-    {{ form_end(formCommande)}}
+
+                <h3 class="text-center">Informations Visiteurs</h3>
+        <div class="form-group well">
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                {% for billet in formCommande.billets %}
+                    <div class="form-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading row" role="tab" id="heading{{ loop.index }}">
+                                <h4 class=" panel-title">
+                                    <a role="button" class="col-xs-12 btn btn-orange" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ loop.index }}" aria-expanded="{% if loop.index == 1 %}true{% else %}false{% endif %}" aria-controls="collapse{{ loop.index }}">
+                                        Billet n° {{ loop.index }}
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapse{{ loop.index }}" class="panel-collapse collapse {% if loop.index == 1 %}in{% endif %}" role="tabpanel" aria-labelledby="heading{{ loop.index }}">
+                                <div class="panel-body">
+                                    <div class="row more-margin">
+                                        <div class="col-xs-1">
+                                            {{ form_label(billet.nom, "Nom", {'label_attr': {'class': 'control-label'}}) }}
+                                        </div>
+                                        <div class="col-xs-5">
+                                            {{ form_widget(billet.nom) }}
+                                        </div>
+                                        <div class="col-xs-1">
+                                            {{ form_label(billet.prenom, "Prénom", {'label_attr': {'class': 'control-label'}}) }}
+                                        </div>
+                                        <div class="col-xs-5">
+                                            {{ form_widget(billet.prenom) }}
+                                        </div>
+                                    </div>
+                                    <div class="row more-margin">
+                                        {{ form_errors(billet.nom) }}
+                                        {{ form_errors(billet.prenom) }}
+                                    </div>
+                                    <div class="row more-margin">
+                                        <div class="col-xs-2">
+                                            {{ form_label(billet.dateNaissance, "Date de naissance", {'label_attr': {'class': 'control-label'}}) }}
+                                        </div>
+                                        <div class="col-xs-4">
+                                            {{ form_widget(billet.dateNaissance) }}
+                                        </div>
+                                        <div class="col-xs-1">
+                                            {{ form_label(billet.pays, "Pays", {'label_attr': {'class': 'control-label'}}) }}
+                                        </div>
+                                        <div class="col-xs-3">
+                                            {{ form_widget(billet.pays) }}
+                                        </div>
+                                        <div class="col-xs-2">
+                                            {{ form_widget(billet.tarifReduit) }}
+                                        </div>
+                                        <div class="row more-margin">
+                                            {{ form_errors(billet.dateNaissance) }}
+                                            {{ form_errors(billet.pays) }}
+                                            {{ form_errors(billet.tarifReduit) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div>
+            <div class="row">
+                {# Pour le bouton, pas de label ni d'erreur, on affiche juste le widget #}
+                {{ form_widget(formCommande.paiement, {'attr': {'class': 'btn btn-orange col-xs-offset-8 col-xs-3'}}) }}
+            </div>
+        </div>
+
+        {{ form_end(formCommande)}}
+    </div>
 {% endblock %}
 
 {% block title %}
-    Choix des billets - Billetterie
+    Vos billets - Billetterie
+{% endblock %}
+{% block javascripts %}
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 {% endblock %}
 
 

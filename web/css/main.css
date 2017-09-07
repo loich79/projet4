@@ -75,8 +75,15 @@ h3 {
 }
 .btn-orange {
     background-color: rgb(201,45,0);
-    color: white;
+    color: white!important;
+}
+.btn-grey {
+    background-color: grey;
+    color: white!important;
 }
 .active {
     background-color: rgb(201,45,0)!important;
+}
+.more-margin {
+    margin: 5px 0px;
 }

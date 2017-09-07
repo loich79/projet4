@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -36,7 +37,11 @@ class CommandeType extends AbstractType
                     'data' => "journee"
                 )
             )
-            ->add('email', EmailType::class)
+            ->add('email', RepeatedType::class, array(
+                'type' => EmailType::class,
+                'invalid_message' => 'Les deux adresse e-mail doivent être identiques.',
+                'required' => true,
+            ))
             ->add('nombreBillets', IntegerType::class, array('attr' => array('min' =>  1, 'max' => 10)))
             ->add('billets', CollectionType::class, array(
                 'entry_type' => BilletType::class,

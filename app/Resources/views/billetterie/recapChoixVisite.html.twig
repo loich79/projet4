@@ -1,12 +1,24 @@
-<ul class="list-unstyled">
-    <li>Date de visite : {{ app.session.get('commande').dateVisite |date("d/m/Y") }} </li>
-    <li>
-        {% if app.session.get('commande').type == 'journee'%}
-            Type de billets : Journée
-        {% elseif app.session.get('commande').type == 'demi-journee' %}
-            Type de billets : Demi-journée
-        {% endif %}
-    </li>
-    <li>Nombre de billets : {{ app.session.get('commande').nombreBillets }}</li>
-</ul>
-<a href="{{  path('choix-visite-billetterie') }}">Modifier</a>
+<h4>Date de visite</h4>
+<p>
+    {{ app.session.get('commande').dateVisite |date("d/m/Y") }}
+</p>
+
+<h4>Type de billets</h4>
+<p>
+    {% if app.session.get('commande').type == 'journee'%}
+        Journée
+    {% elseif app.session.get('commande').type == 'demi-journee' %}
+        Demi-journée
+    {% endif %}
+</p>
+{% for message in app.session.flashbag.get('notice') %}
+    <div class="alert alert-info">{{ message }}</div>
+{% endfor %}
+
+<h4>Nombre de billets</h4>
+<p>{{ app.session.get('commande').nombreBillets }}</p>
+{% if app.session.get('commande').email != "" %}
+    <h4>Email</h4>
+    <p>{{ app.session.get('commande').email }}</p>
+{% endif %}
+<a href="{{  path('choix-visite-billetterie') }}" class="btn btn-orange">Modifier</a>
