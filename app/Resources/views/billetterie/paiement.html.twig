@@ -13,46 +13,44 @@
             <li> <span class="bubble"></span> confirmation </li>
         </ul>
     </div>
-    <h2>Récapitulatif et paiement</h2>
-    {% for message in app.session.flashbag.get('erreur') %}
-        <div class="alert alert-danger">{{ message }}</div>
-    {% endfor %}
-    <h3>Récapitulatif des choix précédents : </h3>
-    <ul class="list-unstyled">
-        <li>Date de visite : {{ app.session.get('commande').dateVisite |date("d/m/Y") }} </li>
-        {% if app.session.get('commande').type == 'journee'%}
-            <li>Type de billets : Journée </li>
-        {% elseif app.session.get('commande').type == 'demi-journee' %}
-            <li>Type de billets : Demi-journée </li>
-        {% endif %}
-        <li>Nombre de billets : {{ app.session.get('commande').nombreBillets }}</li>
-    </ul>
-    <a href="{{  path('choix-visite-billetterie') }}">Modifier</a>
-    <h3>Billets</h3>
-
-    {% for billet in app.session.get('commande').billets %}
-        <div>
-            <h4>Billet n° {{ loop.index }}</h4>
-            <p> Visiteur : {{ billet.prenom }} {{ billet.nom }} (date de naissance : {{ billet.dateNaissance |date("d/m/Y") }})</p>
-            <p>Prix du billet : {{ billet.tarif }} €</p>
+    <h2 class="text-center">Récapitulatif et paiement</h2>
+    <div class="well">
+        {% for message in app.session.flashbag.get('erreur') %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
+        <h3 class="text-center">Récapitulatif des choix précédents : </h3>
+        <div class="row">
+            <div class=" col-sm-6 text-center well">
+                <h4>Votre Visite</h4>
+                {% include 'billetterie/recapChoixVisite.html.twig' %}
+            </div>
+            <div class=" col-sm-6 text-center well">
+                <h4>Vos billets</h4>
+                {% for billet in app.session.get('commande').billets %}
+                    <div class="well">
+                        <h5>Billet n° {{ loop.index }}</h5>
+                        <p>{{ billet.prenom }} {{ billet.nom }} (date de naissance : {{ billet.dateNaissance |date("d/m/Y") }})</p>
+                        <p>Prix du billet : {{ billet.tarif }} €</p>
+                    </div>
+                {% endfor %}
+                <a href="{{  path('infos-visiteurs-billetterie') }}" class="btn btn-orange">Modifier</a>
+            </div>
         </div>
-    {% endfor %}
-    <div>
-        <p>Montant total : {{ app.session.get('commande').montantTotal }} €</p>
+        <div class="well text-center">
+            <h4>Montant total : {{ app.session.get('commande').montantTotal }} €</h4>
+            <form action="{{ path('retour-paiement-billetterie') }}" method="POST">
+                <script
+                        src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                        data-key="pk_test_Dyzokz6lSCgTFBddF8lAAxir"
+                        data-amount="{{ app.session.get('commande').montantTotal }}00"
+                        data-name="Billetterie"
+                        data-description="Louvre"
+                        data-locale="auto"
+                        data-currency="eur">
+                </script>
+            </form>
+        </div>
     </div>
-    <a href="{{  path('infos-visiteurs-billetterie') }}">Modifier</a>
-
-    <form action="{{ path('retour-paiement-billetterie') }}" method="POST">
-        <script
-                src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-                data-key="pk_test_Dyzokz6lSCgTFBddF8lAAxir"
-                data-amount="{{ app.session.get('commande').montantTotal }}00"
-                data-name="Billetterie"
-                data-description="Louvre"
-                data-locale="auto"
-                data-currency="eur">
-        </script>
-    </form>
 {% endblock %}
 
 {% block title %}
@@ -62,4 +60,7 @@
 {% block javascripts %}
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        $('.stripe-button-el span').text('paiement');
+    </script>
 {% endblock %}

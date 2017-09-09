@@ -74,7 +74,7 @@ h3 {
     align-items: center;
 }
 .btn-orange {
-    background-color: rgb(201,45,0);
+    background-color: rgb(201,45,0)!important;
     color: white!important;
 }
 .btn-grey {
