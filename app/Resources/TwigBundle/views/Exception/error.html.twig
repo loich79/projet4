@@ -1,0 +1,12 @@
+{% extends '::base.html.twig' %}
+{% block content %}
+    <div class="text-center alert alert-danger more-margin">
+        <h2 class="unstyled-title">Oups ! Une erreur est survenue !</h2>
+        <h3 class="unstyled-title">Le serveur a retourné l'erreur suivante : "{{ status_code }} {{ status_text }}".</h3>
+        <h4>Message d'erreur : {{ exception.message }}</h4>
+        <p>
+            Veuillez nous excuser pour la gêne occasionnée. N'hesitez pas à nous contacter pour nous signaler cette erreur.
+        </p>
+    </div>
+    <p class="text-center"><a href="{{ path('homepage-billetterie') }}" class="btn btn-orange">Retour à l'accueil</a></p>
+{% endblock %}

@@ -22,14 +22,13 @@ class GestionnaireCommande
     }
     public function initialiserCommandePageChoixVisite(Commande $commande)
     {
+        $this->session->set('commande', $commande);
     }
 
     public function traiterCommandePageChoixVisite(Commande $commande)
     {
         // appelle du service de correction automatique du type
         $this->correcteurType->corrigerType($commande);
-        // crée la variable de session commande contenant la commande
-        $this->session->set('commande', $commande);
     }
     public function initialiserCommandePageInfosVisiteurs(Commande $commande)
     {

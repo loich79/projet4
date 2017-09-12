@@ -49,6 +49,10 @@ h3 {
     color: white;
     font-size: 1.4em;
 }
+.unstyled-title {
+    background-color: inherit!important;
+    color: inherit!important;
+}
 .index-paragraph {
     margin: 5px;
 }

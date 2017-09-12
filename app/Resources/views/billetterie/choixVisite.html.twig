@@ -23,18 +23,15 @@
         {% endfor %}
         {{ form_start(formCommande, {'attr': {'class': 'form-horizontal'}}) }}
 
-        {# Les erreurs générales du formulaire. #}
         {{ form_errors(formCommande) }}
-
-
-        {# Génération manuelle et éclatée : #}
+        {# DATE DE VISITE #}
         <div class="form-group well">
-            {# Génération du label. #}
+
             <h3 class="row text-center">
             {{ form_label(formCommande.dateVisite, "Date de la Visite", {'label_attr': {'class': 'control-label'}}) }}
             </h3>
             <div class="row ">
-                {# Génération de l'input. #}
+
                 <div id="datepicker" data-date-format="yyyy-mm-dd" class="col-sm-offset-2 col-sm-3 col-xs-offset-2"></div>
                 <div id="info-datevisite" class="col-sm-offset-2 col-sm-3">
                     <div>
@@ -47,7 +44,7 @@
             </div>
         </div>
 
-        {# Idem pour un autre champ. #}
+        {# TYPE DE BILLET #}
         <div class="form-group text-center well">
             <h3 class="row text-center">{{ form_label(formCommande.type, "Type de Billet", {'label_attr': {'class': 'control-label'}}) }}</h3>
             <div >
@@ -56,6 +53,7 @@
             {{ form_errors(formCommande.type) }}
         </div>
 
+        {# NOMBRE DE BILLETS #}
         <div class="form-group well">
 
             <h3 class="row text-center">{{ form_label(formCommande.nombreBillets, "Nombre de billets", {'label_attr': {'class': 'control-label'}}) }}</h3>
