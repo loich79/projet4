@@ -6,6 +6,7 @@ namespace AppBundle\Utils;
 
 use AppBundle\Entity\Billet;
 use AppBundle\Entity\Commande;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class GestionnaireCommande
@@ -13,12 +14,14 @@ class GestionnaireCommande
     private $session;
     private $calculateurTarif;
     private $correcteurType;
+    private $em;
 
-    public function __construct(Session $session, CalculateurTarif $calculateurTarif, CorrecteurType $correcteurType)
+    public function __construct(Session $session, CalculateurTarif $calculateurTarif, CorrecteurType $correcteurType, EntityManagerInterface $em)
     {
         $this->session = $session;
         $this->calculateurTarif = $calculateurTarif;
         $this->correcteurType = $correcteurType;
+        $this->em = $em;
     }
     public function initialiserCommandePageChoixVisite(Commande $commande)
     {
@@ -56,6 +59,12 @@ class GestionnaireCommande
         // ajoute le token comme code de réservation a la commande et la date du jour comme date de reservation
         $codeReservation = str_replace('tok_','',$token);
         $codeReservation = strtoupper($codeReservation);
-        $this->session->get('commande')->setCodeReservation($codeReservation)->setDateReservation(new \DateTime());
+        $commande->setCodeReservation($codeReservation)->setDateReservation(new \DateTime());
+    }
+    public function enregistrerCommande($commande)
+    {
+        //enregistre la commande en bdd
+        $this->em->persist($commande);
+        $this->em->flush();
     }
 }

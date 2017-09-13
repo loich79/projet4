@@ -42,21 +42,20 @@ class BilletterieController extends Controller
 
         if($this->get('session')->has('commande') === false && $request->isMethod('POST')) {
             return $this->redirectToRoute('session-expiree-billetterie');
-        } else {
-            $this->get('app.gestionnairecommande')->initialiserCommandePageChoixVisite($commande);
-            // test la methode de request et les contenus des champs du formulaire et la dispo des billets pour la date selectionnée
-            if ($request->isMethod('POST') && $formCommande->handleRequest($request)->isValid()
-                && $this->get('app.verificateurdispobillets')->verifierDispoBillets($commande->getDateVisite())
-            ) {
-                // traitement sur la commande : correction automatique du type et ajout de la commande en session
-                $this->get('app.gestionnairecommande')->traiterCommandePageChoixVisite($commande);
-                //indique que l'etape est validé
-                $this->get('session')->set('etapeValidee', 'choix-visite');
-                // redirige vers la seconde page du tunnel
-                return $this->redirectToRoute('infos-visiteurs-billetterie');
-            }
-
         }
+        $this->get('app.gestionnairecommande')->initialiserCommandePageChoixVisite($commande);
+        // test la methode de request et les contenus des champs du formulaire et la dispo des billets pour la date selectionnée
+        if ($request->isMethod('POST') && $formCommande->handleRequest($request)->isValid()
+            && $this->get('app.verificateurdispobillets')->verifierDispoBillets($commande->getDateVisite())
+        ) {
+            // traitement sur la commande : correction automatique du type et ajout de la commande en session
+            $this->get('app.gestionnairecommande')->traiterCommandePageChoixVisite($commande);
+            //indique que l'etape est validé
+            $this->get('session')->set('etapeValidee', 'choix-visite');
+            // redirige vers la seconde page du tunnel
+            return $this->redirectToRoute('infos-visiteurs-billetterie');
+        }
+
         // affiche la page choixVisite.html.twig
         return $this->render('Billetterie/choixVisite.html.twig', array(
             'formCommande' => $formCommande->createView(),
@@ -76,25 +75,24 @@ class BilletterieController extends Controller
         }
         if($this->get('session')->has('commande') === false) {
             return $this->redirectToRoute('session-expiree-billetterie');
-        } else {
-            // récupère la commande depuis la session
-            $commande = $this->get('session')->get('commande');
-            // instancie le gestionnaire de commande
-            $gestionnaireCommande = $this->get("app.gestionnairecommande");
-            // réinitialise le montant total pour éviter les erreurs de calcul du montant total (ex: retour en arriere sur le navigateur)
-            // et ajoute les billets en fonction du nombre de billets selectionné a la page précédente
-            $gestionnaireCommande->initialiserCommandePageInfosVisiteurs($commande);
-            // crée le formulaire pour la commande
-            $formCommande = $this->get('form.factory')->create(CommandeDeuxiemePageType::class, $commande);
-            if ($request->isMethod('POST') && $formCommande->handleRequest($request)->isValid()) {
-                // ajoute les attributs non hydratés par le formulaire pour chaque billet ( dateVisite, type, tarifs et commande)
-                // et calcule le montant total
-                $gestionnaireCommande->traiterCommandePageInfosVisiteurs($commande);
-                //indique que l'etape est validé
-                $this->get('session')->set('etapeValidee', 'infos-visiteurs');
-                // redirige vers la page de paiement
-                return $this->redirectToRoute('paiement-billetterie');
-            }
+        }
+        // récupère la commande depuis la session
+        $commande = $this->get('session')->get('commande');
+        // instancie le gestionnaire de commande
+        $gestionnaireCommande = $this->get("app.gestionnairecommande");
+        // réinitialise le montant total pour éviter les erreurs de calcul du montant total (ex: retour en arriere sur le navigateur)
+        // et ajoute les billets en fonction du nombre de billets selectionné a la page précédente
+        $gestionnaireCommande->initialiserCommandePageInfosVisiteurs($commande);
+        // crée le formulaire pour la commande
+        $formCommande = $this->get('form.factory')->create(CommandeDeuxiemePageType::class, $commande);
+        if ($request->isMethod('POST') && $formCommande->handleRequest($request)->isValid()) {
+            // ajoute les attributs non hydratés par le formulaire pour chaque billet ( dateVisite, type, tarifs et commande)
+            // et calcule le montant total
+            $gestionnaireCommande->traiterCommandePageInfosVisiteurs($commande);
+            //indique que l'etape est validé
+            $this->get('session')->set('etapeValidee', 'infos-visiteurs');
+            // redirige vers la page de paiement
+            return $this->redirectToRoute('paiement-billetterie');
         }
         // affiche la page infosVisiteurs.html.twig
         return $this->render('billetterie/infosVisiteurs.html.twig', array(
@@ -165,17 +163,13 @@ class BilletterieController extends Controller
                 $mailer->send($message);
                 // modifie l'indicateur de mail envoyé
                 $commande->setEmailSent(true);
-                //enregistre la commande en bdd
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($commande);
-                $em->flush();
+                $this->get('app.gestionnairecommande')->enregistrerCommande($commande);
             }
             //indique que l'etape est validé
             $this->get('session')->set('etapeValidee', 'retour-paiement');
             // redirige sur la page confirmation de paiement
             return $this->redirectToRoute("confirmation-paiement-billetterie");
         } catch(\Stripe\Error\Card $e) {
-
             $this->get('session')->getFlashBag()->add("erreur","Une erreur est survenue, veuillez réessayer");
             return $this->redirectToRoute("paiement-billetterie");
             // The card has been declined

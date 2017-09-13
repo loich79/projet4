@@ -63,3 +63,4 @@ services:
             - '@session'
             - '@app.calculateurtarif'
             - '@app.correcteurtype'
+            - '@doctrine.orm.entity_manager'
