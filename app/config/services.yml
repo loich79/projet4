@@ -72,3 +72,10 @@ services:
         arguments:
             - '@mailer'
             - '@twig'
+
+    # Createur de facturation pour stripe
+    app.createurfacturationstripe:
+        class: AppBundle\Utils\CreateurFacturationStripe
+        public: true
+        arguments:
+            - '@session'

@@ -17,7 +17,7 @@ class Mailer
         $this->twig = $twig;
     }
 
-    public function EnvoyerMailCommande(Commande $commande)
+    public function envoyerMailCommande(Commande $commande)
     {
         if(!$commande->getEmailSent()) {
             //envoie du mail de confirmation

@@ -36,9 +36,10 @@ class GestionnaireCommande
     public function initialiserCommandePageInfosVisiteurs(Commande $commande)
     {
         $commande->setMontantTotal(0);
+        $nombreBillets = $commande->getNombreBillets();
 
-        if($commande->getBillets()->count() != $commande->getNombreBillets()) {
-            for($billetACreer = 0; $billetACreer < $commande->getNombreBillets(); $billetACreer++ ) {
+        if($commande->getBillets()->count() != $nombreBillets) {
+            for($billetACreer = 0; $billetACreer < $n; $billetACreer++ ) {
                 $billet = new Billet();
                 $commande->addBillet($billet);
             }

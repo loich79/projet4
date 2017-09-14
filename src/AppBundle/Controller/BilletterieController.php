@@ -132,7 +132,7 @@ class BilletterieController extends Controller
      *     methods="POST"
      * )
      */
-    public function retourPaiementAction(Request $request, \Swift_Mailer $mailer)
+    public function retourPaiementAction(Request $request)
     {
         if($this->get('session')->get("etapeValidee") != 'paiement') {
             throw new \Exception('Vous ne pouvez pas accéder à cette page.');
@@ -141,28 +141,16 @@ class BilletterieController extends Controller
             return $this->redirectToRoute('session-expiree-billetterie');
         }
         $commande = $this->get('session')->get('commande');
-        // renseigne la clé secrète de stripe
-        Stripe::setApiKey("sk_test_z8jlJCKrSKN0U59keBnd272U");
-
         // recupère le token de la transaction
         $token = $request->get('stripeToken');
-        // Crée la facturation
-        try {
-            $charge = Charge::create(array(
-                "amount" => ($this->get('session')->get('commande')->getMontantTotal()*100), // Amount in cents
-                "currency" => "eur",
-                "source" => $token,
-                "description" => "Paiement Billetterie du Louvre"
-            ));
-        } catch(\Stripe\Error\Card $e) {
-            $this->get('session')->getFlashBag()->add("erreur","Une erreur est survenue, veuillez réessayer");
+        // Crée la facturation et redirige vers la page de paiement en cas d'erreur
+        if($this->get('app.createurfacturationstripe')->creerFacturation($token) === false) {
             return $this->redirectToRoute("paiement-billetterie");
-            // The card has been declined
         }
         // traitement sur la commande : ajout du code de reservation et de la date de reservation
         $this->get('app.gestionnairecommande')->traiterCommandePageRetourPaiement($this->get('session')->get('commande'), $token);
         // vérifie si l'email est envoyé (permet d'eviter le renvoi du mail en cas de retour arrière)
-        if($this->get('app.mailer')->EnvoyerMailCommande($commande)) {
+        if($this->get('app.mailer')->envoyerMailCommande($commande)) {
             $this->get('app.gestionnairecommande')->enregistrerCommande($commande);
         }
         //indique que l'etape est validée
