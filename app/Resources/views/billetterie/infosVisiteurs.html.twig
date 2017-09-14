@@ -28,10 +28,12 @@
         {# Les erreurs générales du formulaire. #}
         {{ form_errors(formCommande) }}
 
-
         {# Génération manuelle et éclatée : #}
         <div class="form-group well">
             <div class="row text-center">
+                <div class="row">
+                    <p>Une adresse e-mail est nécessaire pour vous fournir vos billets. Cet email vous sera demandé à l'entrée du musée.</p>
+                </div>
                 <div class="row">
                 {# Génération du label. #}
                 {{ form_label(formCommande.email.first, "Votre adresse email", {'label_attr': {'class': 'control-label'}}) }}
@@ -62,7 +64,7 @@
         </div>
 
 
-                <h3 class="text-center">Informations Visiteurs</h3>
+                <h3 class="text-center">Vos billets</h3>
         <div class="form-group well">
             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                 {% for billet in formCommande.billets %}

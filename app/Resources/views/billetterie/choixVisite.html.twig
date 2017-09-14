@@ -59,7 +59,7 @@
             <h3 class="row text-center">{{ form_label(formCommande.nombreBillets, "Nombre de billets", {'label_attr': {'class': 'control-label'}}) }}</h3>
 
             <div class="col-sm-offset-5 col-sm-2">
-                {{ form_widget(formCommande.nombreBillets) }}
+                {{ form_widget(formCommande.nombreBillets, {'attr': {'class': 'text-center'}}) }}
             </div>
             <div>
                 {{ form_errors(formCommande.nombreBillets) }}

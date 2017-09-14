@@ -19,7 +19,7 @@
         <p class="text-center">Pensez à vous munir des pièces d'identité de chaque visiteur et si besoin des justificatifs pour les billets bénéficiant du tarif réduit.</p>
     </div>
     <div class="row text-center">
-        <a href="{{ path('affichage-email') }}" class="btn btn-orange more-margin">voir l'e-mail</a>
+        <a href="{{path('affichage-email', {'codeReservation': codeReservation}) }}" class="btn btn-orange more-margin">voir l'email</a>
     </div>
 {% endblock %}
 

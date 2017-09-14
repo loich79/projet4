@@ -50,7 +50,7 @@ class BilletterieController extends Controller
         ) {
             // traitement sur la commande : correction automatique du type et ajout de la commande en session
             $this->get('app.gestionnairecommande')->traiterCommandePageChoixVisite($commande);
-            //indique que l'etape est validé
+            //indique que l'etape est validée
             $this->get('session')->set('etapeValidee', 'choix-visite');
             // redirige vers la seconde page du tunnel
             return $this->redirectToRoute('infos-visiteurs-billetterie');
@@ -68,16 +68,18 @@ class BilletterieController extends Controller
      * @throws \Exception
      * @route("/infos-visiteurs", name="infos-visiteurs-billetterie")
      */
-    public function infosVisiteursAction(Request $request)
+    public function infosVisiteursAction(Request $request, Session $session)
     {
-        if($this->get('session')->get("etapeValidee") != 'choix-visite') {
+       if($session->get("etapeValidee") != 'choix-visite'
+           && $session->get("etapeValidee") != 'paiement'
+           && $session->get("etapeValidee") != 'infos-visiteurs') {
             throw new \Exception('Vous ne pouvez pas accéder à cette page.');
         }
-        if($this->get('session')->has('commande') === false) {
+        if($session->has('commande') === false) {
             return $this->redirectToRoute('session-expiree-billetterie');
         }
         // récupère la commande depuis la session
-        $commande = $this->get('session')->get('commande');
+        $commande = $session->get('commande');
         // instancie le gestionnaire de commande
         $gestionnaireCommande = $this->get("app.gestionnairecommande");
         // réinitialise le montant total pour éviter les erreurs de calcul du montant total (ex: retour en arriere sur le navigateur)
@@ -89,8 +91,9 @@ class BilletterieController extends Controller
             // ajoute les attributs non hydratés par le formulaire pour chaque billet ( dateVisite, type, tarifs et commande)
             // et calcule le montant total
             $gestionnaireCommande->traiterCommandePageInfosVisiteurs($commande);
-            //indique que l'etape est validé
-            $this->get('session')->set('etapeValidee', 'infos-visiteurs');
+            //indique que l'etape est validée
+            $session->set('etapeValidee', 'infos-visiteurs');
+
             // redirige vers la page de paiement
             return $this->redirectToRoute('paiement-billetterie');
         }
@@ -108,13 +111,13 @@ class BilletterieController extends Controller
      */
     public function paiementAction(Request $request)
     {
-        if($this->get('session')->get("etapeValidee") != 'infos-visiteurs') {
+        if($this->get('session')->get("etapeValidee") != 'infos-visiteurs' && $this->get('session')->get("etapeValidee") != 'paiement') {
             throw new \Exception('Vous ne pouvez pas accéder à cette page.');
         }
         if($this->get('session')->has('commande') === false) {
             return $this->redirectToRoute('session-expiree-billetterie');
         }
-        //indique que l'etape est validé
+        //indique que l'etape est validée
         $this->get('session')->set('etapeValidee', 'paiement');
         // affiche la page paiement.html.twig
         return $this->render('billetterie/paiement.html.twig');
@@ -151,29 +154,21 @@ class BilletterieController extends Controller
                 "source" => $token,
                 "description" => "Paiement Billetterie du Louvre"
             ));
-            // traitement sur la commande : ajout du code de reservation et de la date de reservation
-            $this->get('app.gestionnairecommande')->traiterCommandePageRetourPaiement($this->get('session')->get('commande'), $token);
-            // vérifie si l'email est envoyé (permet d'eviter le renvoi du mail en cas de retour arrière)
-            if(!$commande->getEmailSent()) {
-                //envoie du mail de confirmation
-                $message = (new \Swift_Message('confirmation de commande'))
-                    ->setFrom('lhay17@gmail.com')
-                    ->setTo($commande->getEmail())
-                    ->setBody($this->renderView('Billetterie/Emails/confirmationCommande.html.twig'), 'text/html');
-                $mailer->send($message);
-                // modifie l'indicateur de mail envoyé
-                $commande->setEmailSent(true);
-                $this->get('app.gestionnairecommande')->enregistrerCommande($commande);
-            }
-            //indique que l'etape est validé
-            $this->get('session')->set('etapeValidee', 'retour-paiement');
-            // redirige sur la page confirmation de paiement
-            return $this->redirectToRoute("confirmation-paiement-billetterie");
         } catch(\Stripe\Error\Card $e) {
             $this->get('session')->getFlashBag()->add("erreur","Une erreur est survenue, veuillez réessayer");
             return $this->redirectToRoute("paiement-billetterie");
             // The card has been declined
         }
+        // traitement sur la commande : ajout du code de reservation et de la date de reservation
+        $this->get('app.gestionnairecommande')->traiterCommandePageRetourPaiement($this->get('session')->get('commande'), $token);
+        // vérifie si l'email est envoyé (permet d'eviter le renvoi du mail en cas de retour arrière)
+        if($this->get('app.mailer')->EnvoyerMailCommande($commande)) {
+            $this->get('app.gestionnairecommande')->enregistrerCommande($commande);
+        }
+        //indique que l'etape est validée
+        $this->get('session')->set('etapeValidee', 'retour-paiement');
+        // redirige sur la page confirmation de paiement
+        return $this->redirectToRoute("confirmation-paiement-billetterie");
     }
 
     /**
@@ -188,18 +183,34 @@ class BilletterieController extends Controller
         if($this->get('session')->get("etapeValidee") != 'retour-paiement') {
             throw new \Exception('Vous ne pouvez pas accéder à cette page.');
         }
+        if($this->get('session')->has('commande')){
+            $codeReservation = $this->get('session')->get('commande')->getCodeReservation();
+            $this->get('session')->set('codeReservation', $codeReservation);
+        } elseif($this->get('session')->has('codeReservation')) {
+            $codeReservation = $this->get('session')->get('codeReservation');
+        } else {
+            throw new \Exception('Code de réservation inexistant : contacter nous si vous ne recevez pas l\'email de confirmation de commande.');
+        }
+
+        $this->get('session')->remove('commande');
         // affiche la page confirmationPaiement.html.twig
-        return $this->render('billetterie/confirmationPaiement.html.twig');
+        return $this->render('billetterie/confirmationPaiement.html.twig', array('codeReservation' => $codeReservation));
     }
 
     /**
+     * @param $codeReservation
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/affichage-email", name="affichage-email")
+     * @throws \Exception
+     * @Route("/email/{codeReservation}", name="affichage-email")
      */
-    public function affichageEmailAction()
+    public function affichageEmailAction($codeReservation)
     {
+        $commande = $this->getDoctrine()->getManager()->getRepository('AppBundle:Commande')->findByCodeReservation($codeReservation);
+        if($commande === false) {
+            throw new \Exception("Code de reservation incorrect ou inexistant");
+        }
         //affiche l'email
-        return $this->render('billetterie/Emails/confirmationCommande.html.twig');
+        return $this->render('billetterie/Emails/confirmationCommande.html.twig', array('commande' => $commande));
     }
 
     /**

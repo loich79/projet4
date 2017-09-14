@@ -29,28 +29,40 @@
     <body>
         <div class="container">
             <div id="banner" class="row align-items-center">
-                <div id="logo" class="col-xs-2"><img src="http://www.louvre.fr/sites/all/themes/louvre/img/data/logo-louvre.jpg"></div>
+                <div id="logo" class="col-xs-2"><a href="{{ path('homepage-billetterie') }}"><img src="http://www.louvre.fr/sites/all/themes/louvre/img/data/logo-louvre.jpg"></a></div>
                 <div id="main-title"class="col-xs-8"><h1 class="text-center">Musée du louvre</h1></div>
             </div>
             <div id="content" class="row text-center">
-                <h2>votre commande du {{ app.session.get('commande').dateReservation |date("d/m/Y") }}</h2>
+                <h2>votre commande du {{ commande.dateReservation |date("d/m/Y") }}</h2>
                 <ul class="list-unstyled">
-                    <li>Date de visite : {{ app.session.get('commande').dateVisite |date("d/m/Y") }} </li>
-                    {% if app.session.get('commande').type == 'journee'%}
+                    <li>Date de visite : {{ commande.dateVisite |date("d/m/Y") }} </li>
+                    {% if commande.type == 'journee'%}
                         <li>Type de billets : Journée </li>
-                    {% elseif app.session.get('commande').type == 'demi-journee' %}
+                    {% elseif commande.type == 'demi-journee' %}
                         <li>Type de billets : Demi-journée </li>
                     {% endif %}
-                    <li>Nombre de billets : {{ app.session.get('commande').nombreBillets }}</li>
-                    <li>Montant Total : {{ app.session.get('commande').montantTotal }} €</li>
-                    <li>Code de la réservation : {{ app.session.get('commande').codeReservation }}</li>
+                    <li>Nombre de billets : {{ commande.nombreBillets }}</li>
+                    <li>Montant Total : {{ commande.montantTotal }} €</li>
+                    <li>Code de la réservation : {{ commande.codeReservation }}</li>
                 </ul>
                 <h3>vos billets</h3>
-                {% for billet in app.session.get('commande').billets %}
+                <p>N'oubliez pas de vous munir d'une pièce d'identité pour chaque visiteurs et si nécessaire des justificatifs pour les billets à tarif réduit.</p>
+                {% for billet in commande.billets %}
                     <div>
-                        <p><strong>Billet n° {{ loop.index }} ({{ billet.tarif }} €) :</strong>  {{ billet.prenom }} {{ billet.nom }} ({{ billet.dateNaissance |date("d/m/Y") }})</p>
+                        <p>
+                            <strong>Billet n° {{ loop.index }} ({{ billet.tarif }} €) :</strong>
+                            {{ billet.prenom }} {{ billet.nom }}
+                            ({{ billet.dateNaissance |date("d/m/Y") }})
+                            {{ billet.pays }}
+                            {% if billet.tarifReduit == true %}
+                            / tarif réduit (Justificatif nécessaire)
+                            {% endif %}
+                        </p>
                     </div>
                 {% endfor %}
+            </div>
+            <div class="text-center">
+                <a href="{{path('affichage-email', {'codeReservation': commande.codeReservation}) }}">Afficher l'email sur votre navigateur</a>
             </div>
         </div>
     </body>

@@ -3,7 +3,9 @@
     <div class="text-center alert alert-danger more-margin">
         <h2 class="unstyled-title">La page demandée n'existe pas !</h2>
         <h3 class="unstyled-title">Le serveur a retourné l'erreur suivante : "{{ status_code }} {{ status_text }}".</h3>
-
+        {% if exception.message = "Code de reservation incorrect ou inexistant"%}
+        <h4>Message d'erreur : {{ exception.message }}</h4>
+        {% endif %}
         <p>
             Veuillez nous excuser pour la gêne occasionnée. N'hesitez pas à nous contacter pour nous signaler cette erreur.
         </p>

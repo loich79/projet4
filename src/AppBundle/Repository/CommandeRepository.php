@@ -10,4 +10,18 @@ namespace AppBundle\Repository;
  */
 class CommandeRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findByCodeReservation($codeReservation)
+    {
+        try {
+            $result = $this->createQueryBuilder('commande')
+                ->where('commande.codeReservation = :codeReservation')
+                ->setParameter('codeReservation', $codeReservation)
+                ->getQuery()
+                ->getSingleResult();
+        } catch (\Exception $e) {
+            $result = false;
+        }
+
+        return $result;
+    }
 }

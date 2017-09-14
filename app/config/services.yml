@@ -64,3 +64,11 @@ services:
             - '@app.calculateurtarif'
             - '@app.correcteurtype'
             - '@doctrine.orm.entity_manager'
+
+    # mailer
+    app.mailer:
+        class: AppBundle\Utils\Mailer
+        public: true
+        arguments:
+            - '@mailer'
+            - '@twig'
