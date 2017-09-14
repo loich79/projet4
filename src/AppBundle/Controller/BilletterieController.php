@@ -4,11 +4,10 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Commande;
-use AppBundle\Form\CommandeDeuxiemePageType;
-use AppBundle\Form\CommandePremierePageType;
+use AppBundle\Form\Type\CommandeDeuxiemePageType;
+use AppBundle\Form\Type\CommandePremierePageType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Stripe\Charge;
-use Stripe\Stripe;
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;

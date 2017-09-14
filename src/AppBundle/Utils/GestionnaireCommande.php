@@ -39,7 +39,7 @@ class GestionnaireCommande
         $nombreBillets = $commande->getNombreBillets();
 
         if($commande->getBillets()->count() != $nombreBillets) {
-            for($billetACreer = 0; $billetACreer < $n; $billetACreer++ ) {
+            for($billetACreer = 0; $billetACreer < $nombreBillets; $billetACreer++ ) {
                 $billet = new Billet();
                 $commande->addBillet($billet);
             }
