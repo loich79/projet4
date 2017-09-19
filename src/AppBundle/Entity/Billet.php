@@ -55,7 +55,7 @@ class Billet
      *
      * @ORM\Column(name="date_naissance", type="date")
      *
-     * @Assert\LessThan("today")
+     * @Assert\LessThan("today", message="Une date de naissance ne peux pas être une date future")
      */
     private $dateNaissance;
 

@@ -7,8 +7,16 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * Class BilletterieControllerTest
+ * @package Tests\AppBundle\Controller
+ */
 class BilletterieControllerTest extends WebTestCase
 {
+
+    /**
+     * test la route "/"
+     */
     public function testRouteIndex()
     {
         $client = static::createClient();
@@ -19,11 +27,17 @@ class BilletterieControllerTest extends WebTestCase
         $this->assertContains('Horaires', $crawler->filter('#content h2')->text());
     }
 
+    /**
+     * test la route "/choix-visite"
+     */
     public function testRouteChoixVisite()
     {
         $client = static::createClient();
+        $container = $client->getContainer();
 
         $session = new Session(new MockFileSessionStorage());
+        $container->set('session', $session);
+
         $commande = new Commande();
         $session->set('commande', $commande);
 
@@ -33,6 +47,9 @@ class BilletterieControllerTest extends WebTestCase
         $this->assertContains('Votre Visite', $crawler->filter('#content h2')->text());
     }
 
+    /**
+     * test la route "/infos-visiteurs"
+     */
     public function testRouteInfosVisiteurs()
     {
         $client = static::createClient();
@@ -40,6 +57,7 @@ class BilletterieControllerTest extends WebTestCase
 
         $session = new Session(new MockFileSessionStorage());
         $container->set('session', $session);
+
         $commande = new Commande();
         $session->set('commande', $commande);
         $session->set('etapeValidee', 'choix-visite');
@@ -50,6 +68,9 @@ class BilletterieControllerTest extends WebTestCase
         $this->assertContains('Informations Visiteurs', $crawler->filter('#content h2')->text());
     }
 
+    /**
+     * test la route "/paiement"
+     */
     public function testRoutePaiement()
     {
         $client = static::createClient();
@@ -57,6 +78,7 @@ class BilletterieControllerTest extends WebTestCase
 
         $session = new Session(new MockFileSessionStorage());
         $container->set('session', $session);
+
         $commande = new Commande();
         $session->set('commande', $commande);
         $session->set('etapeValidee', 'infos-visiteurs');
@@ -67,6 +89,9 @@ class BilletterieControllerTest extends WebTestCase
         $this->assertContains('Récapitulatif et Paiement', $crawler->filter('#content h2')->text());
     }
 
+    /**
+     * test la route "/confirmation-paiement"
+     */
     public function testRouteConfirmationPaiement()
     {
         $client = static::createClient();
@@ -74,6 +99,10 @@ class BilletterieControllerTest extends WebTestCase
 
         $session = new Session(new MockFileSessionStorage());
         $container->set('session', $session);
+
+        $commande = new Commande();
+        $commande->setCodeReservation('abcd');
+        $session->set('commande', $commande);
         $session->set('etapeValidee', 'retour-paiement');
 
         $crawler = $client->request('GET', '/confirmation-paiement');
@@ -82,6 +111,9 @@ class BilletterieControllerTest extends WebTestCase
         $this->assertContains('Le musée du Louvre vous remercie pour votre réservation et vous souhaite une bonne visite !', $crawler->filter('#content h2')->text());
     }
 
+    /**
+     * test la route "/session-expiree"
+     */
     public function testRouteSessionExpiree()
     {
         $client = static::createClient();
