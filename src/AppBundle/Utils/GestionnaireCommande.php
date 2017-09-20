@@ -53,6 +53,10 @@ class GestionnaireCommande
                 ->setCommande($commande);
             $commande->setMontantTotal($commande->getMontantTotal() + $billet->getTarif());
         }
+        if($commande->getMontantTotal() <= 8) {
+            return false;
+        }
+        return true;
     }
 
     public function traiterCommandePageRetourPaiement(Commande $commande, string $token)

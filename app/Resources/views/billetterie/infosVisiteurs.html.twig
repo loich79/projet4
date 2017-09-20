@@ -14,18 +14,21 @@
         </ul>
     </div>
     <h2 class="text-center">Informations Visiteurs</h2>
+    {# On affiche tous les messages flash dont le nom est « erreur » #}
+    {% for message in app.session.flashbag.get('erreur') %}
+        <div class="alert alert-danger text-center">{{ message }}</div>
+    {% endfor %}
+    {% for message in app.session.flashbag.get('warningNbBillets') %}
+        <div class="alert alert-warning text-center">{{ message }}</div>
+    {% endfor %}
     <div class="well">
         <h3 class="text-center">Récapitulatif des choix précédents : </h3>
         <div class="row text-center">
         {% include 'billetterie/recapChoixVisite.html.twig' %}
         </div>
-        {# On affiche tous les messages flash dont le nom est « erreur » #}
-        {% for message in app.session.flashbag.get('erreur') %}
-            <div class="alert alert-danger">{{ message }}</div>
-        {% endfor %}
         <h3 class="text-center">Informations pour la commande </h3>
         {{ form_start(formCommande)}}
-        {# Les erreurs générales du formulaire. #}
+
         {{ form_errors(formCommande) }}
 
         {# Génération manuelle et éclatée : #}
@@ -35,37 +38,35 @@
                     <p>Une adresse e-mail est nécessaire pour vous fournir vos billets. Cet email vous sera demandé à l'entrée du musée.</p>
                 </div>
                 <div class="row">
-                {# Génération du label. #}
                 {{ form_label(formCommande.email.first, "Votre adresse email", {'label_attr': {'class': 'control-label'}}) }}
                 </div>
                 <div class="row">
                     <div class="col-sm-offset-2 col-sm-8">
-                        {# Génération de l'input. #}
                         {{ form_widget(formCommande.email.first) }}
                     </div>
                 </div>
-                {# Affichage des erreurs pour ce champ précis. #}
-                {{ form_errors(formCommande.email.first) }}
+
             </div>
             <div class="row text-center">
                 <div class="row">
-                    {# Génération du label. #}
                     {{ form_label(formCommande.email.second, "Confirmez votre adresse email", {'label_attr': {'class': 'control-label'}}) }}
                 </div>
                 <div class="row">
                     <div class="col-sm-offset-2 col-sm-8">
-                        {# Génération de l'input. #}
                         {{ form_widget(formCommande.email.second) }}
                     </div>
                 </div>
-                {# Affichage des erreurs pour ce champ précis. #}
+
+            </div>
+            <div class="row text-center">
+                {{ form_errors(formCommande.email.first) }}
                 {{ form_errors(formCommande.email.second) }}
             </div>
         </div>
 
-
-                <h3 class="text-center">Vos billets</h3>
+        <h3 class="text-center">Vos billets</h3>
         <div class="form-group well">
+            <p class="text-center">Chaque billet est nominatif, une pièce d'identité vous sera demandée à l'entrée.</p>
             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                 {% for billet in formCommande.billets %}
                     <div class="form-group">
@@ -80,44 +81,42 @@
                             <div id="collapse{{ loop.index }}" class="panel-collapse collapse {% if loop.index == 1 %}in{% endif %}" role="tabpanel" aria-labelledby="heading{{ loop.index }}">
                                 <div class="panel-body">
                                     <div class="row more-margin">
-                                        <div class="col-xs-1">
+                                        <div class="col-sm-1">
                                             {{ form_label(billet.nom, "Nom", {'label_attr': {'class': 'control-label'}}) }}
                                         </div>
-                                        <div class="col-xs-5">
+                                        <div class="col-sm-5">
                                             {{ form_widget(billet.nom) }}
                                         </div>
-                                        <div class="col-xs-1">
+                                        <div class="col-sm-1">
                                             {{ form_label(billet.prenom, "Prénom", {'label_attr': {'class': 'control-label'}}) }}
                                         </div>
-                                        <div class="col-xs-5">
+                                        <div class="col-sm-5">
                                             {{ form_widget(billet.prenom) }}
                                         </div>
                                     </div>
                                     <div class="row more-margin">
-                                        {{ form_errors(billet.nom) }}
-                                        {{ form_errors(billet.prenom) }}
-                                    </div>
-                                    <div class="row more-margin">
-                                        <div class="col-xs-2">
+                                        <div class="col-sm-4 col-md-2">
                                             {{ form_label(billet.dateNaissance, "Date de naissance", {'label_attr': {'class': 'control-label'}}) }}
                                         </div>
-                                        <div class="col-xs-4">
+                                        <div class="col-sm-8 col-md-4">
                                             {{ form_widget(billet.dateNaissance) }}
                                         </div>
-                                        <div class="col-xs-1">
+                                        <div class="col-sm-2 col-md-1">
                                             {{ form_label(billet.pays, "Pays", {'label_attr': {'class': 'control-label'}}) }}
                                         </div>
-                                        <div class="col-xs-3">
+                                        <div class="col-sm-6 col-md-3">
                                             {{ form_widget(billet.pays) }}
                                         </div>
-                                        <div class="col-xs-2">
+                                        <div class="col-sm-4 col-md-2">
                                             {{ form_widget(billet.tarifReduit) }}
                                         </div>
-                                        <div class="row more-margin">
-                                            {{ form_errors(billet.dateNaissance) }}
-                                            {{ form_errors(billet.pays) }}
-                                            {{ form_errors(billet.tarifReduit) }}
-                                        </div>
+                                    </div>
+                                    <div id="error" class="row text-center">
+                                        {{ form_errors(billet.nom) }}
+                                        {{ form_errors(billet.prenom) }}
+                                        {{ form_errors(billet.dateNaissance) }}
+                                        {{ form_errors(billet.pays) }}
+                                        {{ form_errors(billet.tarifReduit) }}
                                     </div>
                                 </div>
                             </div>

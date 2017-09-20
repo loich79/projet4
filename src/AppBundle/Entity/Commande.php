@@ -27,7 +27,6 @@ class Commande
      * @var \DateTime
      *
      * @ORM\Column(name="date_reservation", type="date")
-     * @Assert\Date()
      */
     private $dateReservation;
 
@@ -35,7 +34,7 @@ class Commande
      * @var int
      *
      * @ORM\Column(name="nombre_billets", type="integer")
-     * @Assert\Range(min="1", max="10", maxMessage="Au-delà de 10 billets vous devez contacter le musée pour réserver")
+     * @Assert\Range(min="1", max="10", minMessage="Vous devez avoir au moins un billet à commander", maxMessage="Au-delà de 10 billets vous devez contacter le musée pour réserver")
      */
     private $nombreBillets;
 

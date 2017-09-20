@@ -10,14 +10,15 @@
     </head>
     <body>
         <div class="container">
-            <div id="banner" class="row align-items-center">
+            <header id="banner" class="row align-items-center">
                 <div id="logo" class="col-xs-2"><img src="{{ asset('img/louvre.png') }}"></div>
                 <div id="main-title"class="col-xs-8"><h1 class="text-center"><a href="{{ path('homepage-billetterie') }}" class="link-unstyled">Billetterie</a></h1></div>
-            </div>
+            </header>
             <div id="content" class="row">
                 {% block content %}{% endblock %}
             </div>
         </div>
+        <footer class="alert text-center" style="color: gainsboro">Copyright © Loïc Hay</footer>
         {% block javascripts %}{% endblock %}
     </body>
 </html>

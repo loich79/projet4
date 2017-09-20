@@ -21,7 +21,7 @@ $('#datepicker').on('changeDate', function() {
         dateAffichee = dateAffichee+dateSelected[i]+"/";
     }
     dateAffichee = dateAffichee.slice(0,10);
-    $('#date-selected').val(dateAffichee);
+    $('#date-selected').text(dateAffichee);
 });
 
 $('input[type="radio"]').hide();

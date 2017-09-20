@@ -88,13 +88,16 @@ class BilletterieController extends Controller
         $formCommande = $this->get('form.factory')->create(CommandeDeuxiemePageType::class, $commande);
         if ($request->isMethod('POST') && $formCommande->handleRequest($request)->isValid()) {
             // ajoute les attributs non hydratés par le formulaire pour chaque billet ( dateVisite, type, tarifs et commande)
-            // et calcule le montant total
-            $gestionnaireCommande->traiterCommandePageInfosVisiteurs($commande);
-            //indique que l'etape est validée
-            $session->set('etapeValidee', 'infos-visiteurs');
-
-            // redirige vers la page de paiement
-            return $this->redirectToRoute('paiement-billetterie');
+            // et calcule le montant total, teste egalement si le montant total est inférieur ou égal à 8€ pour éviter
+            // les commandes pour un enfant de moins de 12 ans seul
+            if($gestionnaireCommande->traiterCommandePageInfosVisiteurs($commande)) {
+                //indique que l'etape est validée
+                $session->set('etapeValidee', 'infos-visiteurs');
+                // redirige vers la page de paiement
+                return $this->redirectToRoute('paiement-billetterie');
+            } else {
+                $this->get('session')->getFlashBag()->add('erreur', "Les enfants de moins de 12 ans doivent être accompagnés d'un adulte.");
+            }
         }
         // affiche la page infosVisiteurs.html.twig
         return $this->render('billetterie/infosVisiteurs.html.twig', array(
@@ -143,13 +146,13 @@ class BilletterieController extends Controller
         // recupère le token de la transaction
         $token = $request->get('stripeToken');
         // Crée la facturation et redirige vers la page de paiement en cas d'erreur
-        if($this->get('app.createurfacturationstripe')->creerFacturation($token) === false) {
+        if ($this->get('app.createurfacturationstripe')->creerFacturation($token) === false) {
             return $this->redirectToRoute("paiement-billetterie");
         }
         // traitement sur la commande : ajout du code de reservation et de la date de reservation
         $this->get('app.gestionnairecommande')->traiterCommandePageRetourPaiement($this->get('session')->get('commande'), $token);
         // vérifie si l'email est envoyé (permet d'eviter le renvoi du mail en cas de retour arrière)
-        if($this->get('app.mailer')->envoyerMailCommande($commande)) {
+        if ($this->get('app.mailer')->envoyerMailCommande($commande)) {
             $this->get('app.gestionnairecommande')->enregistrerCommande($commande);
         }
         //indique que l'etape est validée

@@ -29,7 +29,7 @@ class Billet
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=255)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Le nom doit être renseigné.")
      */
     private $nom;
 
@@ -37,7 +37,7 @@ class Billet
      * @var string
      *
      * @ORM\Column(name="prenom", type="string", length=255)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Le prénom doit être renseigné.")
      */
     private $prenom;
 
@@ -46,7 +46,7 @@ class Billet
      * @var string
      *
      * @ORM\Column(name="pays", type="string", length=255)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Le pays doit être renseigné.")
      */
     private $pays;
 

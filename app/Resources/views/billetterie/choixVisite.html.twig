@@ -23,22 +23,23 @@
         {% endfor %}
         {{ form_start(formCommande, {'attr': {'class': 'form-horizontal'}}) }}
 
-        {{ form_errors(formCommande) }}
+        <div class="alert">{{ form_errors(formCommande) }}</div>
         {# DATE DE VISITE #}
         <div class="form-group well">
 
             <h3 class="row text-center">
             {{ form_label(formCommande.dateVisite, "Date de la Visite", {'label_attr': {'class': 'control-label'}}) }}
             </h3>
+            <p class="text-center">Sélectionnez la date de votre visite. Vous ne pouvez pas sélectionner un mardi, un dimanche ou un jour férié.</p>
             <div class="row ">
 
-                <div id="datepicker" data-date-format="yyyy-mm-dd" class="col-sm-offset-2 col-sm-3 col-xs-offset-2"></div>
+                <div id="datepicker" data-date-format="yyyy-mm-dd" class="col-sm-offset-2 col-sm-3 col-xs-offset-3"></div>
                 <div id="info-datevisite" class="col-sm-offset-2 col-sm-3">
                     <div>
                         <p class="text-center"><strong>Date sélectionnée : </strong></p>
                         {{ form_widget(formCommande.dateVisite)}}
-                        <input type="text" id="date-selected" value="{{ "now"|date("d/m/Y") }}" class="text-center">
-                        {{ form_errors(formCommande.dateVisite) }}
+                        <p id="date-selected" class="text-center">{{ "now"|date("d/m/Y") }}</p>
+                        <div class="alert">{{ form_errors(formCommande.dateVisite) }}</div>
                     </div>
                 </div>
             </div>
@@ -47,6 +48,7 @@
         {# TYPE DE BILLET #}
         <div class="form-group text-center well">
             <h3 class="row text-center">{{ form_label(formCommande.type, "Type de Billet", {'label_attr': {'class': 'control-label'}}) }}</h3>
+            <p>Un billet "journée" vous permet d'acceder au musée dès 9h tandis qu'un billet "demi-journée" vous permet d'accéder au musée à partir de 14h.</p>
             <div >
                 {{ form_widget(formCommande.type) }}
             </div>
@@ -57,18 +59,12 @@
         <div class="form-group well">
 
             <h3 class="row text-center">{{ form_label(formCommande.nombreBillets, "Nombre de billets", {'label_attr': {'class': 'control-label'}}) }}</h3>
-
+            <p class="text-center">Vous pouvez commander jusqu'à 10 billets sur une même commande, au delà, nous vous invitons à nous contacter.</p>
             <div class="col-sm-offset-5 col-sm-2">
                 {{ form_widget(formCommande.nombreBillets, {'attr': {'class': 'text-center'}}) }}
             </div>
             <div>
                 {{ form_errors(formCommande.nombreBillets) }}
-            </div>
-            <div>
-                {# On affiche tous les messages flash dont le nom est « erreur » #}
-                {% for message in app.session.flashbag.get('warningNbBillets') %}
-                    <div class="alert alert-warning">{{ message }}</div>
-                {% endfor %}
             </div>
         </div>
 

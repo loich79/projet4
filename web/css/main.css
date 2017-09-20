@@ -85,6 +85,11 @@ h3 {
     color: inherit;
     text-decoration:none;
 }
+/* personalisation des erreurs affichées dans les formulaires*/
+.help-block {
+    color: #a94442!important;
+    background-color: #f2dede;
+}
 /* Personalisation bouton paiement */
 .stripe-button-el span{
     font-size: 1em;
