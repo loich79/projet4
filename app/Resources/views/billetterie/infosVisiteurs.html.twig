@@ -1,3 +1,4 @@
+{# page pour le second formulaire renseignant les infos sur les visiteurs #}
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
@@ -14,24 +15,28 @@
         </ul>
     </div>
     <h2 class="text-center">Informations Visiteurs</h2>
-    {# On affiche tous les messages flash dont le nom est « erreur » #}
-    {% for message in app.session.flashbag.get('erreur') %}
-        <div class="alert alert-danger text-center">{{ message }}</div>
-    {% endfor %}
-    {% for message in app.session.flashbag.get('warningNbBillets') %}
-        <div class="alert alert-warning text-center">{{ message }}</div>
-    {% endfor %}
     <div class="well">
+        {{ form_start(formCommande)}}
+        <div id="erreur" class="text-center">
+            {# On affiche tous les messages flash dont le nom est « erreur » #}
+            {% for message in app.session.flashbag.get('erreur') %}
+                <div class="alert alert-danger text-center">{{ message }}</div>
+            {% endfor %}
+            {% for message in app.session.flashbag.get('warningNbBillets') %}
+                <div class="alert alert-warning text-center">{{ message }}</div>
+            {% endfor %}
+            {{ form_errors(formCommande) }}
+            {{ form_errors(formCommande.email.first) }}
+            {{ form_errors(formCommande.email.second) }}
+            {{ form_errors(formCommande.billets) }}
+
+        </div>
+
         <h3 class="text-center">Récapitulatif des choix précédents : </h3>
         <div class="row text-center">
         {% include 'billetterie/recapChoixVisite.html.twig' %}
         </div>
         <h3 class="text-center">Informations pour la commande </h3>
-        {{ form_start(formCommande)}}
-
-        {{ form_errors(formCommande) }}
-
-        {# Génération manuelle et éclatée : #}
         <div class="form-group well">
             <div class="row text-center">
                 <div class="row">
@@ -45,7 +50,6 @@
                         {{ form_widget(formCommande.email.first) }}
                     </div>
                 </div>
-
             </div>
             <div class="row text-center">
                 <div class="row">
@@ -56,11 +60,6 @@
                         {{ form_widget(formCommande.email.second) }}
                     </div>
                 </div>
-
-            </div>
-            <div class="row text-center">
-                {{ form_errors(formCommande.email.first) }}
-                {{ form_errors(formCommande.email.second) }}
             </div>
         </div>
 

@@ -10,6 +10,11 @@ namespace AppBundle\Repository;
  */
 class CommandeRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * recherche une commande par son code de réservation
+     * @param $codeReservation
+     * @return bool|mixed
+     */
     public function findByCodeReservation($codeReservation)
     {
         try {

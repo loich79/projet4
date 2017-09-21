@@ -18,6 +18,11 @@ class VerificateurDispoBillets
         $this->session = $session;
     }
 
+    /**
+     * vérifie la disponibilité des billets pour une date donnée (disponibilité quand le nombre de billets est inférieur 1000)
+     * @param $date
+     * @return bool
+     */
     public function verifierDispoBillets($date)
     {
         // récupère le nombre de billets réservés pour la date passée en argument

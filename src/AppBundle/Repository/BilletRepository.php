@@ -10,6 +10,11 @@ namespace AppBundle\Repository;
  */
 class BilletRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * compte le nombre de billets pour une date donnée
+     * @param \DateTime $date
+     * @return int|mixed
+     */
     public function countNombreBillets( \DateTime $date)
     {
         $result = $this->createQueryBuilder('billet')

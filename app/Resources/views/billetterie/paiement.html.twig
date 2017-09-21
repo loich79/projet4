@@ -1,3 +1,4 @@
+{# page affichant le récapitulatif de la commande et permettant le paiement #}
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
@@ -38,17 +39,23 @@
         </div>
         <div id="paiement" class="well text-center">
             <h4>Montant total : {{ app.session.get('commande').montantTotal }} €</h4>
-            <form action="{{ path('retour-paiement-billetterie') }}" method="POST">
-                <script
-                        src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-                        data-key="pk_test_Dyzokz6lSCgTFBddF8lAAxir"
-                        data-amount="{{ app.session.get('commande').montantTotal }}00"
-                        data-name="Billetterie"
-                        data-description="Louvre"
-                        data-locale="auto"
-                        data-currency="eur">
-                </script>
-            </form>
+            <div id="button">
+                {% if app.session.get('commande').montantTotal != 0 %}
+                    <form action="{{ path('retour-paiement-billetterie') }}" method="POST">
+                        <script
+                                src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                                data-key="pk_test_Dyzokz6lSCgTFBddF8lAAxir"
+                                data-amount="{{ app.session.get('commande').montantTotal }}00"
+                                data-name="Billetterie"
+                                data-description="Louvre"
+                                data-locale="auto"
+                                data-currency="eur">
+                        </script>
+                    </form>
+                {% else %}
+                    <a href="{{  path('confirmation-commande-billetterie') }}" class="btn btn-orange text-center">Confirmer votre commande</a>
+                {% endif %}
+            </div>
         </div>
     </div>
 {% endblock %}
@@ -61,6 +68,6 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
-        $('.stripe-button-el span').text('paiement');
+            $('.stripe-button-el span').text('paiement');
     </script>
 {% endblock %}

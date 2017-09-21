@@ -15,6 +15,10 @@ class CorrecteurType
         $this->session = $session;
     }
 
+    /**
+     * change le type de billets en "demi-journée" si la date de visite est aujourd'hui et si l'heure est supérieur à 14h
+     * @param Commande $commande
+     */
     public function corrigerType(Commande $commande) {
         // test si la date selectionné est aujourd'hui et si l'heure actuel est supérieur à 14h
         $today = new \DateTime();

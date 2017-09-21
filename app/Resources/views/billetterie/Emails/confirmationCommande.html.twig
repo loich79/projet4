@@ -1,3 +1,4 @@
+{# page pour le formatage de l'email #}
 <!DOCTYPE html>
 <html lang="fr">
     <head>
@@ -7,6 +8,9 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
         <link rel="icon" type="image/x-icon" href="/projet4/web/favicon.ico">
         <style>
+            body {
+                background-color: rgb(51, 17, 7);
+            }
             #banner {
                 display: flex;
                 align-content: center;
@@ -14,19 +18,32 @@
                 color: white;
                 height: 100px;
             }
-            #logo, img{
-                height: 100px;
+            #logo {
                 margin: auto;
             }
-            body {
-                background-color: rgb(198,198,198);
+            img {
+                height: 100px;
+            }
+            #content {
+                background-color: white;
+                padding-bottom: 10px;
+            }
+            h2 {
+                background-color: rgb(201,45,0);
+                color: white;
+                font-size: 1.6em;
+            }
+            h3 {
+                background-color: rgb(78,78,78);
+                color: white;
+                font-size: 1.4em;
             }
         </style>
     </head>
     <body>
         <div class="container">
             <div id="banner" class="row">
-                <div id="logo"><a href="{{ path('homepage-billetterie') }}"><img src="http://www.louvre.fr/sites/all/themes/louvre/img/data/logo-louvre.jpg"></a></div>
+                <div id="logo"><a href="{{ path('homepage-billetterie') }}"><img src="http://www.louvre.fr/sites/all/themes/louvre/img/data/logo-louvre.jpg" alt="logo-louvre"></a></div>
             </div>
             <div id="content" class="row text-center">
                 <h2>votre commande du {{ commande.dateReservation |date("d/m/Y") }}</h2>
@@ -42,7 +59,8 @@
                     <li>Code de la réservation : {{ commande.codeReservation }}</li>
                 </ul>
                 <h3>vos billets</h3>
-                <p>N'oubliez pas de vous munir d'une pièce d'identité pour chaque visiteurs et si nécessaire des justificatifs pour les billets à tarif réduit.</p>
+                <p>N'oubliez pas de vous munir d'une pièce d'identité pour chaque visiteurs et, si nécessaire, des justificatifs pour les billets à tarif réduit.</p>
+                <p>Les enfants de moins de 12 ans doivent être accompagnés d'un adulte.</p>
                 {% for billet in commande.billets %}
                     <div>
                         <p>
@@ -55,10 +73,10 @@
                             {% endif %}
                         </p>
                     </div>
+                    <div class="text-center">
+                        <a href="{{path('affichage-email', {'codeReservation': commande.codeReservation}) }}">Afficher l'email sur votre navigateur</a>
+                    </div>
                 {% endfor %}
-            </div>
-            <div class="text-center">
-                <a href="{{path('affichage-email', {'codeReservation': commande.codeReservation}) }}">Afficher l'email sur votre navigateur</a>
             </div>
         </div>
     </body>

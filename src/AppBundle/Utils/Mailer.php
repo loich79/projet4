@@ -17,12 +17,18 @@ class Mailer
         $this->twig = $twig;
     }
 
-    public function envoyerMailCommande(Commande $commande)
+    /**
+     * envoie le mail de confirmation de commande et indique que le mail est envoyé dans la commmande
+     * @param Commande $commande
+     * @param $expediteur
+     * @return bool
+     */
+    public function envoyerMailCommande(Commande $commande, $expediteur)
     {
         if(!$commande->getEmailSent()) {
             //envoie du mail de confirmation
             $message = (new \Swift_Message('confirmation de commande'))
-                ->setFrom('lhay17@gmail.com')
+                ->setFrom($expediteur)
                 ->setTo($commande->getEmail())
                 ->setBody($this->twig->render('Billetterie/Emails/confirmationCommande.html.twig', array('commande' => $commande)), 'text/html');
             $this->mailer->send($message);

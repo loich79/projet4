@@ -1,3 +1,4 @@
+{# template général pour le site #}
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,14 +13,14 @@
     <body>
         <div class="container">
             <header id="banner" class="row">
-                <div id="logo" class="hidden-xs col-sm-2"><img src="{{ asset('img/louvre.png') }}"></div>
-                <div id="main-title" class="col-xs-12 col-sm-8"><h1 class="text-center"><a href="{{ path('homepage-billetterie') }}" class="link-unstyled">Billetterie</a></h1></div>
+                <div id="logo" class="col-xs-12 col-sm-2"><a href="{{ path('homepage-billetterie') }}" class="link-unstyled"><img src="{{ asset('img/louvre.png') }}" alt="logo-louvre"></a></div>
+                <div id="main-title" class="hidden-xs col-sm-8"><h1 class="text-center"><a href="{{ path('homepage-billetterie') }}" class="link-unstyled">Billetterie</a></h1></div>
             </header>
             <div id="content" class="row">
                 {% block content %}{% endblock %}
             </div>
         </div>
-        <footer class="alert text-center" style="color: gainsboro">Copyright © Loïc Hay</footer>
+        <footer class="alert text-center">Copyright © Loïc Hay</footer>
         {% block javascripts %}{% endblock %}
     </body>
 </html>

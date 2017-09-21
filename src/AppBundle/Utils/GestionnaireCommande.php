@@ -9,6 +9,10 @@ use AppBundle\Entity\Commande;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+/**
+ * Class GestionnaireCommande
+ * @package AppBundle\Utils
+ */
 class GestionnaireCommande
 {
     private $session;
@@ -23,16 +27,30 @@ class GestionnaireCommande
         $this->correcteurType = $correcteurType;
         $this->em = $em;
     }
+
+    /**
+     * prépare la commande en l'ajoutant a la session
+     * @param Commande $commande
+     */
     public function initialiserCommandePageChoixVisite(Commande $commande)
     {
         $this->session->set('commande', $commande);
     }
 
+    /**
+     * déclenche la correction du type
+     * @param Commande $commande
+     */
     public function traiterCommandePageChoixVisite(Commande $commande)
     {
         // appelle du service de correction automatique du type
         $this->correcteurType->corrigerType($commande);
     }
+
+    /**
+     * prépare la commande en créant les billets
+     * @param Commande $commande
+     */
     public function initialiserCommandePageInfosVisiteurs(Commande $commande)
     {
         $commande->setMontantTotal(0);
@@ -46,6 +64,11 @@ class GestionnaireCommande
         }
     }
 
+    /**
+     * ajoute la commande aux billets et calcule le montant total de la commande
+     * @param Commande $commande
+     * @return bool
+     */
     public function traiterCommandePageInfosVisiteurs(Commande $commande)
     {
         foreach ($commande->getBillets() as $billet) {
@@ -53,19 +76,24 @@ class GestionnaireCommande
                 ->setCommande($commande);
             $commande->setMontantTotal($commande->getMontantTotal() + $billet->getTarif());
         }
-        if($commande->getMontantTotal() <= 8) {
-            return false;
-        }
-        return true;
     }
 
+    /**
+     * ajoute le token comme code de réservation a la commande et la date du jour comme date de reservation
+     * @param Commande $commande
+     * @param string $token
+     */
     public function traiterCommandePageRetourPaiement(Commande $commande, string $token)
     {
-        // ajoute le token comme code de réservation a la commande et la date du jour comme date de reservation
         $codeReservation = str_replace('tok_','',$token);
         $codeReservation = strtoupper($codeReservation);
         $commande->setCodeReservation($codeReservation)->setDateReservation(new \DateTime());
     }
+
+    /**
+     * enregistre la commande en base de données
+     * @param $commande
+     */
     public function enregistrerCommande($commande)
     {
         //enregistre la commande en bdd

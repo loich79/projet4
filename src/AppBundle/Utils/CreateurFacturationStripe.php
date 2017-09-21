@@ -17,6 +17,11 @@ class CreateurFacturationStripe
         $this->session = $session;
     }
 
+    /**
+     * crée la facturation par Stripe
+     * @param $token
+     * @return bool
+     */
     public function creerFacturation($token)
     {
         // renseigne la clé secrète de stripe

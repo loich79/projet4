@@ -1,5 +1,7 @@
+// gestion du datepicker
+// masque le champ date de visite pour éviter la modification par ce biais
 $('#commande_premiere_page_dateVisite').hide();
-
+// configure le datepicker
 $('#datepicker').datepicker({
     language: "fr",
     startDate: "today",
@@ -7,10 +9,13 @@ $('#datepicker').datepicker({
     todayHighlight: true,
     datesDisabled: []
 });
+// gestion de l'évènement selection d'une date dans le datepicker
 $('#datepicker').on('changeDate', function() {
+    // change la valeur du champ date de visite
     $('#commande_premiere_page_dateVisite').val(
         $('#datepicker').datepicker('getFormattedDate')
     );
+    // change la valeur de l'afficheur supplémentaires
     $('#date-selected').val(
         $('#datepicker').datepicker()
     );
@@ -23,7 +28,7 @@ $('#datepicker').on('changeDate', function() {
     dateAffichee = dateAffichee.slice(0,10);
     $('#date-selected').text(dateAffichee);
 });
-
+// gere l'affichage des boutons radio pour le type de billets
 $('input[type="radio"]').hide();
 $('.radio label').addClass('btn');
 $('.radio label').css('width', '150px');

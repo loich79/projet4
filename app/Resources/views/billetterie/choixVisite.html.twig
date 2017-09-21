@@ -1,3 +1,4 @@
+{# page pour le premier formulaire renseignant les infos de la visite #}
 {% extends 'base.html.twig' %}
 {% block title %}Votre visite - Billetterie{% endblock %}
 {% block stylesheets %}
@@ -17,13 +18,17 @@
     <h2 class="text-center">Votre Visite</h2>
 
     <div class="well">
-        {# On affiche tous les messages flash dont le nom est « erreur » #}
-        {% for message in app.session.flashbag.get('erreur') %}
-            <div class="alert alert-danger">{{ message }}</div>
-        {% endfor %}
         {{ form_start(formCommande, {'attr': {'class': 'form-horizontal'}}) }}
-
-        <div class="alert">{{ form_errors(formCommande) }}</div>
+        <div id="erreur" class="text-center">
+            {# On affiche tous les messages flash dont le nom est « erreur » #}
+            {% for message in app.session.flashbag.get('erreur') %}
+                <div class="alert alert-danger">{{ message }}</div>
+            {% endfor %}
+            {{ form_errors(formCommande) }}
+            {{ form_errors(formCommande.dateVisite) }}
+            {{ form_errors(formCommande.type) }}
+            {{ form_errors(formCommande.nombreBillets) }}
+        </div>
         {# DATE DE VISITE #}
         <div class="form-group well">
 
@@ -41,7 +46,6 @@
                         <p class="text-center"><strong>Date sélectionnée : </strong></p>
                         {{ form_widget(formCommande.dateVisite)}}
                         <p id="date-selected" class="text-center">{{ "now"|date("d/m/Y") }}</p>
-                        <div class="alert">{{ form_errors(formCommande.dateVisite) }}</div>
                     </div>
                 </div>
             </div>
@@ -54,7 +58,6 @@
             <div >
                 {{ form_widget(formCommande.type) }}
             </div>
-            {{ form_errors(formCommande.type) }}
         </div>
 
         {# NOMBRE DE BILLETS #}
@@ -64,9 +67,6 @@
             <p class="text-center">Vous pouvez commander jusqu'à 10 billets sur une même commande, au delà, nous vous invitons à nous contacter.</p>
             <div class="col-sm-offset-5 col-sm-2">
                 {{ form_widget(formCommande.nombreBillets, {'attr': {'class': 'text-center'}}) }}
-            </div>
-            <div>
-                {{ form_errors(formCommande.nombreBillets) }}
             </div>
         </div>
 
