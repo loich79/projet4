@@ -22,6 +22,10 @@ class CommandeType extends AbstractType
     {
         $nowYear = (int) date('Y');
         $date = new \DateTime();
+        $choiceNbBillets = [];
+        for ($i = 0; $i<=10; $i++) {
+            $choiceNbBillets[$i] = $i;
+        }
         $builder->add('dateVisite', DateType::class, array(
                 'years' => array( $nowYear, $nowYear+1, $nowYear+2, $nowYear+3),
                 'data' => $date,
@@ -42,7 +46,9 @@ class CommandeType extends AbstractType
                 'invalid_message' => 'Les deux adresse e-mail doivent être identiques.',
                 'required' => true,
             ))
-            ->add('nombreBillets', IntegerType::class, array('attr' => array('min' =>  1, 'max' => 10)))
+            ->add('nombreBillets', choiceType::class, array(
+                'choices' => $choiceNbBillets
+            ))
             ->add('billets', CollectionType::class, array(
                 'entry_type' => BilletType::class,
                 'allow_add' => true

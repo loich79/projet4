@@ -2,6 +2,7 @@
 <html lang="fr">
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Confirmation de commande - email</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
         <link rel="icon" type="image/x-icon" href="/projet4/web/favicon.ico">
@@ -13,14 +14,9 @@
                 color: white;
                 height: 100px;
             }
-            #logo {
-                height: 50px;
-                width: 165px;
-                align-self: center;
-                margin: 5px;
-            }
-            #main-title {
-                align-self: center;
+            #logo, img{
+                height: 100px;
+                margin: auto;
             }
             body {
                 background-color: rgb(198,198,198);
@@ -29,9 +25,8 @@
     </head>
     <body>
         <div class="container">
-            <div id="banner" class="row align-items-center">
-                <div id="logo" class="col-xs-2"><a href="{{ path('homepage-billetterie') }}"><img src="http://www.louvre.fr/sites/all/themes/louvre/img/data/logo-louvre.jpg"></a></div>
-                <div id="main-title"class="col-xs-8"><h1 class="text-center">Musée du louvre</h1></div>
+            <div id="banner" class="row">
+                <div id="logo"><a href="{{ path('homepage-billetterie') }}"><img src="http://www.louvre.fr/sites/all/themes/louvre/img/data/logo-louvre.jpg"></a></div>
             </div>
             <div id="content" class="row text-center">
                 <h2>votre commande du {{ commande.dateReservation |date("d/m/Y") }}</h2>

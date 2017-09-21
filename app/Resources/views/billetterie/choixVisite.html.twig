@@ -33,7 +33,9 @@
             <p class="text-center">Sélectionnez la date de votre visite. Vous ne pouvez pas sélectionner un mardi, un dimanche ou un jour férié.</p>
             <div class="row ">
 
-                <div id="datepicker" data-date-format="yyyy-mm-dd" class="col-sm-offset-2 col-sm-3 col-xs-offset-3"></div>
+                <div id="container-datepicker" class="col-sm-offset-2 col-sm-3">
+                    <div id="datepicker" data-date-format="yyyy-mm-dd"></div>
+                </div>
                 <div id="info-datevisite" class="col-sm-offset-2 col-sm-3">
                     <div>
                         <p class="text-center"><strong>Date sélectionnée : </strong></p>
@@ -71,7 +73,7 @@
 
         {# Pour le bouton, pas de label ni d'erreur, on affiche juste le widget #}
         <div class="row">
-        {{ form_widget(formCommande.Suivant, {'attr': {'class': 'btn btn-orange col-xs-offset-8 col-xs-3'}}) }}
+        {{ form_widget(formCommande.Suivant, {'attr': {'class': 'btn btn-orange col-xs-offset-8 col-xs-3 text-center'}}) }}
         </div>
 
         {# Fermeture de la balise <form> du formulaire HTML #}

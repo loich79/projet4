@@ -69,14 +69,15 @@ class BilletterieController extends Controller
      */
     public function infosVisiteursAction(Request $request, Session $session)
     {
-       if($session->get("etapeValidee") != 'choix-visite'
+        if($session->has('commande') === false) {
+            return $this->redirectToRoute('session-expiree-billetterie');
+        }
+        if($session->get("etapeValidee") != 'choix-visite'
            && $session->get("etapeValidee") != 'paiement'
            && $session->get("etapeValidee") != 'infos-visiteurs') {
             throw new \Exception('Vous ne pouvez pas accéder à cette page.');
         }
-        if($session->has('commande') === false) {
-            return $this->redirectToRoute('session-expiree-billetterie');
-        }
+
         // récupère la commande depuis la session
         $commande = $session->get('commande');
         // instancie le gestionnaire de commande
@@ -113,12 +114,13 @@ class BilletterieController extends Controller
      */
     public function paiementAction(Request $request)
     {
-        if($this->get('session')->get("etapeValidee") != 'infos-visiteurs' && $this->get('session')->get("etapeValidee") != 'paiement') {
-            throw new \Exception('Vous ne pouvez pas accéder à cette page.');
-        }
         if($this->get('session')->has('commande') === false) {
             return $this->redirectToRoute('session-expiree-billetterie');
         }
+        if($this->get('session')->get("etapeValidee") != 'infos-visiteurs' && $this->get('session')->get("etapeValidee") != 'paiement') {
+            throw new \Exception('Vous ne pouvez pas accéder à cette page.');
+        }
+
         //indique que l'etape est validée
         $this->get('session')->set('etapeValidee', 'paiement');
         // affiche la page paiement.html.twig
@@ -136,12 +138,13 @@ class BilletterieController extends Controller
      */
     public function retourPaiementAction(Request $request)
     {
-        if($this->get('session')->get("etapeValidee") != 'paiement') {
-            throw new \Exception('Vous ne pouvez pas accéder à cette page.');
-        }
         if($this->get('session')->has('commande') === false) {
             return $this->redirectToRoute('session-expiree-billetterie');
         }
+        if($this->get('session')->get("etapeValidee") != 'paiement') {
+            throw new \Exception('Vous ne pouvez pas accéder à cette page.');
+        }
+
         $commande = $this->get('session')->get('commande');
         // recupère le token de la transaction
         $token = $request->get('stripeToken');
@@ -170,9 +173,6 @@ class BilletterieController extends Controller
      */
     public function confirmationPaiementAction()
     {
-        if($this->get('session')->get("etapeValidee") != 'retour-paiement') {
-            throw new \Exception('Vous ne pouvez pas accéder à cette page.');
-        }
         if($this->get('session')->has('commande')){
             $codeReservation = $this->get('session')->get('commande')->getCodeReservation();
             $this->get('session')->set('codeReservation', $codeReservation);
@@ -180,6 +180,9 @@ class BilletterieController extends Controller
             $codeReservation = $this->get('session')->get('codeReservation');
         } else {
             throw new \Exception('Code de réservation inexistant : contacter nous si vous ne recevez pas l\'email de confirmation de commande.');
+        }
+        if($this->get('session')->get("etapeValidee") != 'retour-paiement') {
+            throw new \Exception('Vous ne pouvez pas accéder à cette page.');
         }
 
         $this->get('session')->remove('commande');
