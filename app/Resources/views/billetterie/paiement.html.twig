@@ -9,12 +9,12 @@
     <div class="step-wizard">
         <ul class="progress-indicator">
             <li class="completed"> <span class="bubble"></span><i class="fa fa-check-circle" aria-hidden="true"></i> Votre visite </li>
-            <li class="completed"> <span class="bubble"></span><i class="fa fa-check-circle" aria-hidden="true"></i> vos billets </li>
-            <li class="completed"> <span class="bubble"></span> paiement </li>
-            <li> <span class="bubble"></span> confirmation </li>
+            <li class="completed"> <span class="bubble"></span><i class="fa fa-check-circle" aria-hidden="true"></i> Vos billets </li>
+            <li class="completed"> <span class="bubble"></span> Paiement </li>
+            <li> <span class="bubble"></span> Confirmation </li>
         </ul>
     </div>
-    <h2 class="text-center">Récapitulatif et Paiement</h2>
+    <h2 class="text-center">Récapitulatif et paiement</h2>
     <div class="well">
         {% for message in app.session.flashbag.get('erreur') %}
             <div class="alert alert-danger">{{ message }}</div>
@@ -30,8 +30,13 @@
                 {% for billet in app.session.get('commande').billets %}
                     <div class="well">
                         <h5>Billet n° {{ loop.index }}</h5>
-                        <p>{{ billet.prenom }} {{ billet.nom }} (date de naissance : {{ billet.dateNaissance |date("d/m/Y") }})</p>
-                        <p>Prix du billet : {{ billet.tarif }} €</p>
+                        <p>{{ billet.prenom }} {{ billet.nom }} (date de naissance : {{ billet.dateNaissance |date("d/m/Y") }}) {{ billet.pays }}</p>
+                        <p>
+                            Prix du billet : {{ billet.tarif }} €
+                            {% if billet.tarifReduit == true %}
+                            (tarif réduit)
+                            {% endif %}
+                        </p>
                     </div>
                 {% endfor %}
                 <a href="{{  path('infos-visiteurs-billetterie') }}" class="btn btn-orange">Modifier</a>
@@ -68,6 +73,6 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
-            $('.stripe-button-el span').text('paiement');
+            $('.stripe-button-el span').text('Paiement');
     </script>
 {% endblock %}

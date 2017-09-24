@@ -152,3 +152,6 @@ déplacement des attributs type et dateVisite de billet vers commande
 
 23/ modification de la gestion des commandes de 0€ + ajout de commentaires et mise à jour du readme
 -
+
+24/ correction orthographique et css (image décalée en version small)
+-

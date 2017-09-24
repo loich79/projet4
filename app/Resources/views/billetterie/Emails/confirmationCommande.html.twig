@@ -73,10 +73,10 @@
                             {% endif %}
                         </p>
                     </div>
-                    <div class="text-center">
-                        <a href="{{path('affichage-email', {'codeReservation': commande.codeReservation}) }}">Afficher l'email sur votre navigateur</a>
-                    </div>
                 {% endfor %}
+                <div class="text-center">
+                    <a href="{{path('affichage-email', {'codeReservation': commande.codeReservation}) }}">Afficher l'email sur votre navigateur</a>
+                </div>
             </div>
         </div>
     </body>

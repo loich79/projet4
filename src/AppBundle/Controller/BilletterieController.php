@@ -224,7 +224,7 @@ class BilletterieController extends Controller
         } elseif($this->get('session')->has('codeReservation')) {
             $codeReservation = $this->get('session')->get('codeReservation');
         } else {
-            throw new \Exception('Code de réservation inexistant : contacter nous si vous ne recevez pas l\'email de confirmation de commande.');
+            return $this->redirectToRoute('session-expiree-billetterie');
         }
         // vérifie de quelle page vient l'utilisateur et renvoie une exception si celle ci n'est pas correcte
         if($this->get('session')->get("etapeValidee") != 'retour-paiement') {

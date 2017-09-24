@@ -1,5 +1,8 @@
 {# page d'accueil de la billetterie contenant les infos pratiques #}
 {% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+{% endblock %}
 {% block title %}Accueil - Billetterie{% endblock %}
 {% block content %}
     <div></div>
@@ -15,8 +18,10 @@
         <h2 class="text-center">Accès</h2>
         <div class="grey-background">
             <p class="text-center">
+                <i class="fa fa-map-marker" aria-hidden="true"></i>
                 <strong>Adresse</strong> : Musée du Louvre, 75058 Paris - France
             </p><p class="text-center">
+                <i class="fa fa-phone" aria-hidden="true"></i>
                 <strong>Téléphone </strong> : + 33 (0)1 40 20 53 17
             </p>
         </div>
@@ -37,11 +42,11 @@
         <ul class="index-paragraph">
             <li>Un tarif « normal » à partir de 12 ans à 16 €.</li>
             <li>Un tarif « enfant » à partir de 4 ans et jusqu’à 12 ans, à 8 € (l’entrée est gratuite pour les enfants de moins de 4 ans).</li>
-            <li>Un tarif « senior » à partir de 60 ans pour 12  €.</li>
+            <li>Un tarif « sénior » à partir de 60 ans pour 12  €.</li>
             <li>Un tarif « réduit » de 10 € accordé dans certaines conditions (étudiant, employé du musée, d’un service du Ministère de la Culture, militaire…).</li>
         </ul>
         <h2 class="text-center">Réservation</h2>
-        <p class="index-paragraph">Vous pouvez réserver vos billets en ligne grace à notre service de billetterie.</p>
+        <p class="index-paragraph">Vous pouvez réserver vos billets en ligne grâce à notre service de billetterie.</p>
         <p class="alert alert-warning text-center">La réservation n'est pas possible pour les mardis, les dimanches et les jours fériés.</p>
         <div class="row">
             <div>

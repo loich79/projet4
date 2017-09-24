@@ -122,6 +122,7 @@ footer {
         width: auto;
         align-self: center;
         margin: auto;
+        padding: 0px;
     }
     img {
         height: 100px;

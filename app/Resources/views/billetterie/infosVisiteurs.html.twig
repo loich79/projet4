@@ -9,12 +9,12 @@
     <div class="step-wizard">
         <ul class="progress-indicator">
             <li class="completed"> <span class="bubble"></span><i class="fa fa-check-circle" aria-hidden="true"></i> Votre visite </li>
-            <li class="completed"> <span class="bubble"></span> vos billets </li>
-            <li> <span class="bubble"></span> paiement </li>
-            <li> <span class="bubble"></span> confirmation </li>
+            <li class="completed"> <span class="bubble"></span> Vos billets </li>
+            <li> <span class="bubble"></span> Paiement </li>
+            <li> <span class="bubble"></span> Confirmation </li>
         </ul>
     </div>
-    <h2 class="text-center">Informations Visiteurs</h2>
+    <h2 class="text-center">Informations visiteurs</h2>
     <div class="well">
         {{ form_start(formCommande)}}
         <div id="erreur" class="text-center">
@@ -32,7 +32,7 @@
 
         </div>
 
-        <h3 class="text-center">Récapitulatif des choix précédents : </h3>
+        <h3 class="text-center">Récapitulatif des choix précédents</h3>
         <div class="row text-center">
         {% include 'billetterie/recapChoixVisite.html.twig' %}
         </div>
